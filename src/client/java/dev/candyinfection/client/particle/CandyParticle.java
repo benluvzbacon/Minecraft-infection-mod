@@ -1,5 +1,6 @@
 package dev.candyinfection.client.particle;
 
+import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.world.ClientWorld;
 
@@ -19,8 +20,14 @@ public class CandyParticle extends SpriteBillboardParticle {
         this.gravityStrength = gravity;
         this.collidesWithWorld = true;
     }
-    // getType() is inherited from SpriteBillboardParticle; in 1.21.1 it returns a
-    // ParticleTextureSheet, not a ParticleEffect.
+    /**
+     * Which texture sheet this particle draws on. In 1.21.1 {@code Particle.getType()}
+     * returns a {@link ParticleTextureSheet}, not a {@code ParticleEffect}.
+     */
+    @Override
+    public ParticleTextureSheet getType() {
+        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    }
 
     @Override
     public void tick() {
