@@ -21,7 +21,7 @@ import dev.candyinfection.item.CandyShovelItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.util.Rarity;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.registry.Registries;

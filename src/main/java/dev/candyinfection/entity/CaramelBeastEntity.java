@@ -60,7 +60,7 @@ public class CaramelBeastEntity extends CandyHostileEntity implements RangedAtta
     }
 
     @Override
-    public void attack(LivingEntity target, float pullProgress) {
+    public void shootAt(LivingEntity target, float pullProgress) {
         if (!(this.getWorld() instanceof ServerWorld world)) {
             return;
         }

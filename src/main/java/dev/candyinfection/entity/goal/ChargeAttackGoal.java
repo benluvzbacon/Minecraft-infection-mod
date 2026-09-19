@@ -107,7 +107,7 @@ public class ChargeAttackGoal extends Goal {
             for (int dz = -1; dz <= 1; dz++) {
                 BlockPos target = pos.add(dx, 1, dz);
                 BlockState state = this.mob.getWorld().getBlockState(target);
-                if (state.isOf(Blocks.OAK_LEAVES) || state.isOf(Blocks.GRASS) || state.isOf(Blocks.FERN)
+                if (state.isOf(Blocks.OAK_LEAVES) || state.isOf(Blocks.SHORT_GRASS) || state.isOf(Blocks.FERN)
                         || state.isOf(Blocks.TALL_GRASS) || state.isOf(Blocks.VINE) || state.isOf(Blocks.SNOW)) {
                     this.mob.getWorld().breakBlock(target, true, this.mob);
                 }

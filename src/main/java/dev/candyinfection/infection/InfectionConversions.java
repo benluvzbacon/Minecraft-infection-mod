@@ -113,7 +113,7 @@ public final class InfectionConversions {
         add(Blocks.AZALEA_LEAVES, CandyBlocks.GUMMY_LEAVES, 0.85F, 2);
 
         // plants and crops ----------------------------------------------------
-        add(Blocks.GRASS, CandyBlocks.GUMMY_GROWTH, 0.9F, 1);
+        add(Blocks.SHORT_GRASS, CandyBlocks.GUMMY_GROWTH, 0.9F, 1);
         add(Blocks.FERN, CandyBlocks.GUMMY_GROWTH, 0.9F, 1);
         add(Blocks.TALL_GRASS, CandyBlocks.GUMMY_GROWTH, 0.85F, 1);
         add(Blocks.LARGE_FERN, CandyBlocks.GUMMY_GROWTH, 0.85F, 1);
@@ -139,7 +139,7 @@ public final class InfectionConversions {
         // Purification targets for infection-only blocks that have no vanilla origin.
         reverse(CandyBlocks.STICKY_SYRUP, Blocks.AIR);
         reverse(CandyBlocks.SUGAR_CRYSTAL_CLUSTER, Blocks.AIR);
-        reverse(CandyBlocks.GUMMY_GROWTH, Blocks.GRASS);
+        reverse(CandyBlocks.GUMMY_GROWTH, Blocks.SHORT_GRASS);
         reverse(CandyBlocks.CHOCOLATE_GROWTH, Blocks.DEAD_BUSH);
         reverse(CandyBlocks.LOLLIPOP_PINK, Blocks.AIR);
         reverse(CandyBlocks.LOLLIPOP_BLUE, Blocks.AIR);

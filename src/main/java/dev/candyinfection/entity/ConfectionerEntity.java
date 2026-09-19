@@ -10,7 +10,6 @@ import dev.candyinfection.infection.PlayerInfection;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.RemovalReason;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
@@ -224,7 +223,7 @@ public class ConfectionerEntity extends CandyHostileEntity {
     }
 
     @Override
-    public void remove(RemovalReason reason) {
+    public void remove(Entity.RemovalReason reason) {
         super.remove(reason);
         this.bossBar.clearPlayers();
     }

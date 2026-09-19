@@ -10,7 +10,6 @@ import dev.candyinfection.util.CandyLog;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.LivingEntity;
@@ -60,8 +59,6 @@ public final class PlayerInfection {
             }
         });
         ServerLivingEntityEvents.AFTER_DAMAGE.register(PlayerInfection::onDamaged);
-        ServerPlayEvents.PLAYER_JOIN.register((handler, sender, server) -> sync(handler.getPlayer()));
-        ServerPlayEvents.PLAYER_DISCONNECT.register((handler, server) -> LAST_SYNCED.remove(handler.getPlayer().getUuid()));
         CandyLog.phase("Player infection system ready (persistent attachment)");
     }
 
@@ -134,6 +131,7 @@ public final class PlayerInfection {
     // ----------------------------------------------------------------- tick
     private static void tick(ServerWorld world) {
         CandyConfig config = CandyConfig.get();
+        pruneSyncCache(world);
         InfectionWorldState data = InfectionWorldState.get(world);
         for (ServerPlayerEntity player : world.getPlayers()) {
             float level = get(player);
@@ -275,6 +273,21 @@ public final class PlayerInfection {
         }
         LAST_SYNCED.put(player.getUuid(), level);
         ServerPlayNetworking.send(player, new InfectionSyncPayload(level, stage, nearby));
+    }
+
+    /**
+     * Drops sync-cache entries for players who are no longer online. Called from
+     * the world tick so the map cannot grow without bound on a busy server.
+     */
+    private static void pruneSyncCache(ServerWorld world) {
+        if (LAST_SYNCED.size() <= world.getPlayers().size()) {
+            return;
+        }
+        java.util.Set<UUID> online = new java.util.HashSet<>();
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            online.add(player.getUuid());
+        }
+        LAST_SYNCED.keySet().retainAll(online);
     }
 
     private static void syncIfNeeded(ServerPlayerEntity player, float level, int stage, int nearby) {

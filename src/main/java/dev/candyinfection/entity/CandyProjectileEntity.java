@@ -32,6 +32,11 @@ public class CandyProjectileEntity extends ThrownEntity {
         super(entityType, world);
     }
 
+    /** The projectile carries no synced state; its payload is set before spawning. */
+    @Override
+    protected void initDataTracker(net.minecraft.entity.data.DataTracker.Builder builder) {
+    }
+
     public CandyProjectileEntity(World world, LivingEntity owner) {
         super(CandyEntities.CANDY_PROJECTILE, owner, world);
     }

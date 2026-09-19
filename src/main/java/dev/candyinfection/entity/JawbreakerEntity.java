@@ -67,7 +67,7 @@ public class JawbreakerEntity extends CandyHostileEntity {
         BlockPos pos = this.getBlockPos();
         for (BlockPos candidate : BlockPos.iterate(pos.add(-1, 0, -1), pos.add(1, 1, 1))) {
             BlockState state = world.getBlockState(candidate);
-            if (state.isOf(Blocks.GRASS) || state.isOf(Blocks.FERN) || state.isOf(Blocks.TALL_GRASS)
+            if (state.isOf(Blocks.SHORT_GRASS) || state.isOf(Blocks.FERN) || state.isOf(Blocks.TALL_GRASS)
                     || state.isOf(Blocks.GLASS) || state.isOf(Blocks.GLASS_PANE)) {
                 world.breakBlock(candidate, true, this);
             }
