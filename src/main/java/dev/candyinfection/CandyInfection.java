@@ -31,7 +31,7 @@ public final class CandyInfection implements ModInitializer {
     public static final String MOD_ID = "candyinfection";
     public static final String MOD_NAME = "Candy Infection";
 
-    private CandyInfection() {
+    public CandyInfection() {
     }
 
     /** Builds a namespaced identifier for this mod. */

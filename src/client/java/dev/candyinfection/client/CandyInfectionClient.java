@@ -11,6 +11,9 @@ import net.minecraft.client.render.RenderLayer;
 
 /** Client entrypoint: renderers, particles, HUD and the sync payload handler. */
 public final class CandyInfectionClient implements ClientModInitializer {
+    public CandyInfectionClient() {
+    }
+
     @Override
     public void onInitializeClient() {
         CandyEntityRenderers.register();
