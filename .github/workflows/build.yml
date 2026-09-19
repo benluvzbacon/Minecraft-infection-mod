@@ -37,7 +37,17 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build mod jar
-        run: ./gradlew --no-daemon --stacktrace build
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace build 2>&1 | tee build-output.txt
+
+      # GitHub's automatic javac parsing keeps only the first line of each
+      # diagnostic, so "cannot find symbol" arrives with no symbol or location.
+      # Re-join each diagnostic into one annotation, and mirror it to the job
+      # summary, so the detail is readable without the raw log blob.
+      - name: Report compile errors
+        if: failure()
+        run: python3 tools/report_build_errors.py build-output.txt
 
       - name: Verify a mod jar was produced
         run: |
