@@ -131,6 +131,11 @@ jobs:
             echo "</details>"
           } >> "${GITHUB_STEP_SUMMARY}"
 
+          # Also emit the headline facts as annotations, which are readable
+          # through the check-run annotations API.
+          echo "::notice title=Mod jar::${JAR} - $(stat -c %s "${JAR}") bytes, $(unzip -l "${JAR}" | grep -c '\.class$' || true) classes, $(unzip -l "${JAR}" | grep -c '\.png$' || true) textures, $(unzip -l "${JAR}" | grep -c '\.json$' || true) json resources"
+          echo "::notice title=fabric.mod.json id and version::$(unzip -p "${JAR}" fabric.mod.json | tr -d '\n ' | grep -o '\"id\":\"[a-z]*\",\"version\":\"[^\"]*\"' || echo 'see summary')"
+
       - name: Upload mod jar artifact
         uses: actions/upload-artifact@v7
         with:
