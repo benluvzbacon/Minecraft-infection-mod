@@ -23,7 +23,7 @@ import net.minecraft.world.World;
  * Sticky candy projectile used by the Caramel Beast and The Confectioner.
  * On impact it damages, glues the target in place and seeds infection.
  */
-public class CandyProjectileEntity extends ThrownEntity {
+public class CandyProjectileEntity extends ThrownEntity implements net.minecraft.entity.FlyingItemEntity {
     private float impactDamage = 5.0F;
     private float infectionAmount = 3.0F;
     private double impactRadius = 2.5D;
@@ -39,6 +39,12 @@ public class CandyProjectileEntity extends ThrownEntity {
 
     public CandyProjectileEntity(World world, LivingEntity owner) {
         super(CandyEntities.CANDY_PROJECTILE, owner, world);
+    }
+
+    /** The item the client renders while this projectile is in flight. */
+    @Override
+    public net.minecraft.item.ItemStack getStack() {
+        return new net.minecraft.item.ItemStack(dev.candyinfection.init.CandyItems.SUGAR_SHARD);
     }
 
     /** Configures the payload of the projectile. */

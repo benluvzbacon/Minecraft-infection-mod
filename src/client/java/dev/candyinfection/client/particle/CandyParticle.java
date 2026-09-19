@@ -2,6 +2,8 @@ package dev.candyinfection.client.particle;
 
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.SimpleParticleType;
 
 /**
  * A tinted billboard particle. All seven candy particles use this one class and
@@ -9,14 +11,23 @@ import net.minecraft.client.world.ClientWorld;
  * cheap while still giving each effect a distinct look.
  */
 public class CandyParticle extends SpriteBillboardParticle {
+    private final SimpleParticleType type;
+
     CandyParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY,
-                  double velocityZ, float red, float green, float blue, float scale, int maxAge, float gravity) {
+                  double velocityZ, SimpleParticleType type, float red, float green, float blue,
+                  float scale, int maxAge, float gravity) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
+        this.type = type;
         this.setColor(red, green, blue);
         this.scale(scale);
         this.setMaxAge(maxAge);
-        this.setGravityStrength(gravity);
+        this.gravityStrength = gravity;
         this.collidesWithWorld = true;
+    }
+
+    @Override
+    public ParticleEffect getType() {
+        return this.type;
     }
 
     @Override

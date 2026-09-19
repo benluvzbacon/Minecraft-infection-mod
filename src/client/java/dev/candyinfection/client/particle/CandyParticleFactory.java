@@ -31,7 +31,7 @@ public class CandyParticleFactory implements ParticleFactory<SimpleParticleType>
     public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z,
                                    double velocityX, double velocityY, double velocityZ) {
         CandyParticle particle = new CandyParticle(world, x, y, z, velocityX, velocityY, velocityZ,
-                this.red, this.green, this.blue, this.scale, this.maxAge, this.gravity);
+                parameters, this.red, this.green, this.blue, this.scale, this.maxAge, this.gravity);
         particle.setSprite(this.sprites);
         return particle;
     }
