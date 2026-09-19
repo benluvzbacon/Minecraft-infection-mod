@@ -2,6 +2,7 @@ package dev.candyinfection.block.entity;
 
 import dev.candyinfection.block.InfectionCoreBlock;
 import dev.candyinfection.init.CandyBlockEntities;
+import dev.candyinfection.init.CandyBlocks;
 import dev.candyinfection.init.CandyItems;
 import dev.candyinfection.init.CandyParticles;
 import dev.candyinfection.infection.InfectionCoreLogic;
