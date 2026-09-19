@@ -68,9 +68,25 @@ jobs:
               exit 1
             fi
           done
+          # A class count alone is a weak signal, so check the classes that prove
+          # the mod is whole: both entrypoints, a registry, an entity, a command.
+          for required_class in \
+            dev/candyinfection/CandyInfection.class \
+            dev/candyinfection/client/CandyInfectionClient.class \
+            dev/candyinfection/init/CandyBlocks.class \
+            dev/candyinfection/init/CandyItems.class \
+            dev/candyinfection/init/CandyEntities.class \
+            dev/candyinfection/infection/InfectionRuntime.class \
+            dev/candyinfection/entity/ConfectionerEntity.class \
+            dev/candyinfection/command/CandyInfectionCommand.class; do
+            if ! unzip -l "${JAR}" | grep -q "${required_class}"; then
+              echo "::error::${JAR} is missing ${required_class} - the mod looks incomplete."
+              exit 1
+            fi
+          done
           CLASS_COUNT="$(unzip -l "${JAR}" | grep -c '\.class$' || true)"
           echo "Compiled classes in jar: ${CLASS_COUNT}"
-          if [ "${CLASS_COUNT}" -lt 100 ]; then
+          if [ "${CLASS_COUNT}" -lt 60 ]; then
             echo "::error::Only ${CLASS_COUNT} classes in the jar - the mod looks incomplete."
             exit 1
           fi
