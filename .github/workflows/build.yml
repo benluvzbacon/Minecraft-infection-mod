@@ -94,6 +94,43 @@ jobs:
           echo "${JAR}" > build/jar-path.txt
           cp "${JAR}" "build/Candy-Infection-1.21.1.jar"
 
+      # Publish the jar inventory to the job summary so the contents are
+      # verifiable without downloading the artifact blob.
+      - name: Record jar contents
+        if: always()
+        run: |
+          set -euo pipefail
+          JAR="$(find build/libs -maxdepth 1 -type f -name 'candyinfection-*.jar' ! -name '*-sources.jar' 2>/dev/null | sort | head -n 1 || true)"
+          {
+            echo "## Candy Infection build"
+            echo
+            if [ -z "${JAR}" ]; then
+              echo "No mod jar was produced."
+              exit 0
+            fi
+            echo "**Jar:** \`${JAR}\` ($(stat -c %s "${JAR}") bytes)"
+            echo
+            echo "| | count |"
+            echo "|---|---|"
+            echo "| .class files | $(unzip -l "${JAR}" | grep -c '\.class$' || true) |"
+            echo "| .png textures | $(unzip -l "${JAR}" | grep -c '\.png$' || true) |"
+            echo "| .json resources | $(unzip -l "${JAR}" | grep -c '\.json$' || true) |"
+            echo "| recipes | $(unzip -l "${JAR}" | grep -c 'data/candyinfection/recipe/' || true) |"
+            echo "| loot tables | $(unzip -l "${JAR}" | grep -c 'data/candyinfection/loot_table/' || true) |"
+            echo
+            echo '```'
+            unzip -p "${JAR}" fabric.mod.json
+            echo '```'
+            echo
+            echo "<details><summary>Full listing</summary>"
+            echo
+            echo '```'
+            unzip -l "${JAR}"
+            echo '```'
+            echo
+            echo "</details>"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
       - name: Upload mod jar artifact
         uses: actions/upload-artifact@v7
         with:
