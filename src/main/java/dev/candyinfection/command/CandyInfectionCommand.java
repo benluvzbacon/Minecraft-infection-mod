@@ -222,8 +222,30 @@ public final class CandyInfectionCommand {
         BlockPos pos = argument != null ? argument
                 : source.getPlayer() != null ? source.getPlayer().getBlockPos() : BlockPos.ORIGIN;
         world.setBlockState(pos, dev.candyinfection.init.CandyBlocks.INFECTION_CORE.getDefaultState(), 3);
-        InfectionWorldState.get(world).addCore(pos);
-        send(source, "Placed an infection core at " + pos.toShortString());
+        // Trigger the block entity's onPlaced logic if it exists, otherwise do it manually
+        if (world.getBlockEntity(pos) instanceof dev.candyinfection.block.entity.InfectionCoreBlockEntity core) {
+            core.onPlaced();
+        } else {
+            // Fallback: manually infect radius and register core
+            InfectionWorldState state = InfectionWorldState.get(world);
+            state.addCore(pos);
+            int converted = 0;
+            for (BlockPos target : BlockPos.iterate(pos.add(-8, -3, -8), pos.add(8, 3, 8))) {
+                if (pos.getSquaredDistance(target) > 64) continue;
+                var cur = world.getBlockState(target);
+                var conv = InfectionConversions.get(cur.getBlock());
+                if (conv != null) {
+                    world.setBlockState(target, conv.toCandy().apply(cur), 3);
+                    converted++;
+                    if (converted > 120) break;
+                }
+            }
+            for (int i = 0; i < 16; i++) {
+                BlockPos q = pos.add(world.random.nextInt(11) - 5, world.random.nextInt(5) - 2, world.random.nextInt(11) - 5);
+                InfectionRuntime.enqueue(world, q);
+            }
+        }
+        send(source, "Placed an infection core at " + pos.toShortString() + " - infection should start spreading immediately. Check with /candyinfection status");
         return 1;
     }
 

@@ -70,8 +70,20 @@ public class InfectionCoreBlock extends BlockWithEntity {
     @Override
     protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         super.onBlockAdded(state, world, pos, oldState, notify);
-        if (!world.isClient && world.getBlockEntity(pos) instanceof InfectionCoreBlockEntity core) {
+        if (world.isClient) return;
+        if (world.getBlockEntity(pos) instanceof InfectionCoreBlockEntity core) {
             core.onPlaced();
+        } else {
+            // Block entity might not exist yet when this is called (e.g. via setBlockState).
+            // Ensure the world state at least knows about the core so spread can start.
+            if (world instanceof net.minecraft.server.world.ServerWorld serverWorld) {
+                dev.candyinfection.infection.InfectionWorldState.get(serverWorld).addCore(pos);
+                // Also enqueue nearby positions to kickstart spread even before BE tick
+                for (int i = 0; i < 8; i++) {
+                    dev.candyinfection.infection.InfectionRuntime.enqueue(serverWorld,
+                            pos.add(serverWorld.random.nextInt(11) - 5, serverWorld.random.nextInt(5) - 2, serverWorld.random.nextInt(11) - 5));
+                }
+            }
         }
     }
 

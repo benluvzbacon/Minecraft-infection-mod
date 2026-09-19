@@ -89,11 +89,25 @@ public final class InfectionRuntime {
             }
         }
 
+        // 1b. aggressive core-driven spread: even if queue is empty, cores keep pushing
+        // This ensures infection starts even if random ticks are slow.
+        if (tick % 10 == 0 && data.getCoreCount() > 0) {
+            BlockPos core = data.nearestCore(world.getPlayers().isEmpty() ? BlockPos.ORIGIN : world.getPlayers().get(0).getBlockPos());
+            if (core != null) {
+                // Enqueue a few positions near core to keep spread alive
+                for (int i = 0; i < 3; i++) {
+                    BlockPos p = core.add(RANDOM.nextInt(15) - 7, RANDOM.nextInt(7) - 3, RANDOM.nextInt(15) - 7);
+                    enqueue(world, p);
+                }
+            }
+        }
+
         // 2. purges ----------------------------------------------------------
         if (config.infectionDecayEnabled && !data.purges().isEmpty()) {
             for (InfectionWorldState.PurgeZone zone : data.purges()) {
                 InfectionSpread.purgeTick(world, zone.center(), zone.radius(), 12);
             }
+            data.tickPurges();
         }
 
         if (tick % 20 != 0) {
@@ -123,7 +137,39 @@ public final class InfectionRuntime {
         // 4. monster caps ----------------------------------------------------
         MONSTER_COUNTS.put(world.getRegistryKey(), countMonsters(world));
 
-        // 5. events ----------------------------------------------------------
+        // 5. region growth & structure building (NEW: actually makes candy biomes and structures appear)
+        if (config.structuresEnabled && data.getTotalInfected() > 20 && RANDOM.nextInt(4) == 0) {
+            try {
+                BlockPos center = data.nearestCore(world.getPlayers().isEmpty() ? BlockPos.ORIGIN : world.getPlayers().get(0).getBlockPos());
+                if (center == null && !world.getPlayers().isEmpty()) {
+                    center = world.getPlayers().get(0).getBlockPos();
+                }
+                if (center != null) {
+                    // Grow a random chunk near infection
+                    BlockPos growPos = center.add(RANDOM.nextInt(33) - 16, 0, RANDOM.nextInt(33) - 16);
+                    net.minecraft.util.math.ChunkPos chunkPos = new net.minecraft.util.math.ChunkPos(growPos);
+                    if (world.isChunkLoaded(chunkPos.x, chunkPos.z)) {
+                        dev.candyinfection.world.gen.CandyRegionGenerator.growChunk(world, chunkPos, RANDOM.nextInt(16), RANDOM.nextInt(16), data);
+                    }
+                    // Occasionally build a structure
+                    if (RANDOM.nextInt(8) == 0) {
+                        String[] kinds = dev.candyinfection.world.gen.CandyStructures.kinds();
+                        String kind = kinds[RANDOM.nextInt(kinds.length)];
+                        BlockPos structPos = center.add(RANDOM.nextInt(41) - 20, 0, RANDOM.nextInt(41) - 20);
+                        dev.candyinfection.world.gen.CandyStructures.build(world, structPos, kind, data);
+                    }
+                    // Occasionally build a nest
+                    if (data.getNestCount() < 12 && RANDOM.nextInt(12) == 0) {
+                        BlockPos nestPos = center.add(RANDOM.nextInt(31) - 15, 0, RANDOM.nextInt(31) - 15);
+                        dev.candyinfection.world.gen.CandyStructures.build(world, nestPos, dev.candyinfection.world.gen.CandyStructures.INFECTION_NEST, data);
+                    }
+                }
+            } catch (Exception e) {
+                CandyLog.debug("Region/structure tick failed: " + e.getMessage());
+            }
+        }
+
+        // 6. events ----------------------------------------------------------
         if (config.eventsEnabled && data.canStartEvent() && data.getTotalInfected() > 40 && RANDOM.nextInt(3) == 0) {
             InfectionEvents.roll(world, data);
         }
@@ -131,7 +177,7 @@ public final class InfectionRuntime {
             InfectionEvents.tick(world, data);
         }
 
-        // 6. boss ------------------------------------------------------------
+        // 7. boss ------------------------------------------------------------
         if (config.bossSpawningEnabled && data.getStage() >= InfectionStages.MAX && !data.isBossSpawned()
                 && RANDOM.nextInt(20) == 0) {
             BlockPos core = data.nearestCore(BlockPos.ORIGIN);

@@ -42,45 +42,45 @@ public final class CandyBlocks {
 
     // stone -----------------------------------------------------------------
     public static final Block CANDY_STONE = infected("candy_stone",
-            new CandyBlock(settings().strength(1.6F, 6.0F).requiresTool().sounds(BlockSoundGroup.STONE).mapColor(MapColor.PINK)));
+            new CandyBlock(settings().strength(1.6F, 6.0F).requiresTool().sounds(BlockSoundGroup.STONE).mapColor(MapColor.PINK).ticksRandomly()));
     public static final Block CANDY_BRICKS = infected("candy_bricks",
-            new CandyBlock(settings().strength(1.9F, 7.0F).requiresTool().sounds(BlockSoundGroup.STONE).mapColor(MapColor.DARK_DULL_PINK)));
+            new CandyBlock(settings().strength(1.9F, 7.0F).requiresTool().sounds(BlockSoundGroup.STONE).mapColor(MapColor.DARK_DULL_PINK).ticksRandomly()));
     public static final Block SUGAR_CRYSTAL_ORE = infected("sugar_crystal_ore",
-            new CandyBlock(settings().strength(3.0F, 3.0F).requiresTool().sounds(BlockSoundGroup.STONE).luminance(state -> 4)));
+            new CandyBlock(settings().strength(3.0F, 3.0F).requiresTool().sounds(BlockSoundGroup.STONE).luminance(state -> 4).ticksRandomly()));
     public static final Block SUGAR_CRYSTAL_BLOCK = infected("sugar_crystal_block",
             new CandyBlock(settings().strength(1.5F).sounds(BlockSoundGroup.AMETHYST_BLOCK).mapColor(MapColor.CYAN)
-                    .nonOpaque().luminance(state -> 7)));
+                    .nonOpaque().luminance(state -> 7).ticksRandomly()));
     public static final Block SUGAR_CRYSTAL_CLUSTER = infected("sugar_crystal_cluster",
             new SugarCrystalClusterBlock(settings().strength(0.6F).sounds(BlockSoundGroup.AMETHYST_CLUSTER)
-                    .nonOpaque().luminance(state -> 4 + state.get(SugarCrystalClusterBlock.SIZE) * 3)));
+                    .nonOpaque().luminance(state -> 4 + state.get(SugarCrystalClusterBlock.SIZE) * 3).ticksRandomly()));
 
     // loose ground -----------------------------------------------------------
     public static final Block CANDY_SAND = infected("candy_sand",
-            new CandyBlock(settings().strength(0.5F).sounds(BlockSoundGroup.SAND).mapColor(MapColor.PALE_YELLOW)));
+            new CandyBlock(settings().strength(0.5F).sounds(BlockSoundGroup.SAND).mapColor(MapColor.PALE_YELLOW).ticksRandomly()));
     public static final Block CANDY_GRAVEL = infected("candy_gravel",
-            new CandyBlock(settings().strength(0.6F).sounds(BlockSoundGroup.GRAVEL).mapColor(MapColor.TERRACOTTA_PINK)));
+            new CandyBlock(settings().strength(0.6F).sounds(BlockSoundGroup.GRAVEL).mapColor(MapColor.TERRACOTTA_PINK).ticksRandomly()));
     public static final Block STICKY_SYRUP = infected("sticky_syrup",
-            new StickySyrupBlock(settings().strength(0.4F).sounds(BlockSoundGroup.HONEY).mapColor(MapColor.ORANGE)));
+            new StickySyrupBlock(settings().strength(0.4F).sounds(BlockSoundGroup.HONEY).mapColor(MapColor.ORANGE).ticksRandomly()));
     public static final Block CARAMEL_GROWTH = infected("caramel_growth",
-            new CaramelBlock(settings().strength(1.2F).sounds(BlockSoundGroup.HONEY).mapColor(MapColor.TERRACOTTA_ORANGE)));
+            new CaramelBlock(settings().strength(1.2F).sounds(BlockSoundGroup.HONEY).mapColor(MapColor.TERRACOTTA_ORANGE).ticksRandomly()));
 
     // wood -------------------------------------------------------------------
     public static final Block GUMMY_LOG = infected("gummy_log",
-            new CandyPillarBlock(settings().strength(2.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.MAGENTA)));
+            new CandyPillarBlock(settings().strength(2.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.MAGENTA).ticksRandomly()));
     public static final Block GUMMY_PLANKS = infected("gummy_planks",
-            new CandyBlock(settings().strength(2.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.PINK)));
+            new CandyBlock(settings().strength(2.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.PINK).ticksRandomly()));
     public static final Block GUMMY_LEAVES = infected("gummy_leaves",
-            new GummyLeavesBlock(settings().strength(0.25F).sounds(BlockSoundGroup.AZALEA_LEAVES).mapColor(MapColor.LIME)));
+            new GummyLeavesBlock(settings().strength(0.25F).sounds(BlockSoundGroup.AZALEA_LEAVES).mapColor(MapColor.LIME).ticksRandomly()));
 
     // vegetation -------------------------------------------------------------
     public static final Block GUMMY_GROWTH = infected("gummy_growth",
-            new CandyPlantBlock(settings().strength(0.0F).sounds(BlockSoundGroup.GRASS).mapColor(MapColor.GREEN), 1.2F));
+            new CandyPlantBlock(settings().strength(0.0F).sounds(BlockSoundGroup.GRASS).mapColor(MapColor.GREEN).ticksRandomly(), 1.2F));
     public static final Block CHOCOLATE_GROWTH = infected("chocolate_growth",
-            new CandyPlantBlock(settings().strength(0.0F).sounds(BlockSoundGroup.GRASS).mapColor(MapColor.BROWN), 1.1F));
+            new CandyPlantBlock(settings().strength(0.0F).sounds(BlockSoundGroup.GRASS).mapColor(MapColor.BROWN).ticksRandomly(), 1.1F));
     public static final Block CHOCOLATE_BLOB = infected("chocolate_blob",
-            new CandyBlock(settings().strength(1.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.SPRUCE_BROWN)));
+            new CandyBlock(settings().strength(1.0F).sounds(BlockSoundGroup.WOOD).mapColor(MapColor.SPRUCE_BROWN).ticksRandomly()));
     public static final Block CANDY_VINES = infected("candy_vines",
-            new CandyVineBlock(settings().strength(0.0F).sounds(BlockSoundGroup.VINE).mapColor(MapColor.MAGENTA)));
+            new CandyVineBlock(settings().strength(0.0F).sounds(BlockSoundGroup.VINE).mapColor(MapColor.MAGENTA).ticksRandomly()));
     public static final Block LOLLIPOP_PINK = infected("lollipop_pink", lollipop(MapColor.PINK));
     public static final Block LOLLIPOP_BLUE = infected("lollipop_blue", lollipop(MapColor.LAPIS_BLUE));
     public static final Block LOLLIPOP_RED = infected("lollipop_red", lollipop(MapColor.RED));
@@ -108,12 +108,12 @@ public final class CandyBlocks {
     }
 
     private static LollipopBlock lollipop(MapColor color) {
-        return new LollipopBlock(settings().strength(0.9F).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque());
+        return new LollipopBlock(settings().strength(0.9F).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque().ticksRandomly());
     }
 
     private static HardCandyBlock hardCandy(MapColor color) {
         return new HardCandyBlock(settings().strength(1.8F, 6.0F).requiresTool().sounds(BlockSoundGroup.GLASS)
-                .mapColor(color).luminance(state -> 3));
+                .mapColor(color).luminance(state -> 3).ticksRandomly());
     }
 
     private static <B extends Block> B infected(String name, B block) {
