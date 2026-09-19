@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "JHJ"
+  ],
+  "key": {
+    "J": {
+      "item": "candyinfection:jawbreaker_fragment"
+    },
+    "H": {
+      "item": "candyinfection:hardened_sugar"
+    }
+  },
+  "result": {
+    "id": "candyinfection:jawbreaker_candy",
+    "count": 2
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "candyinfection:gummy_log"
+    }
+  ],
+  "result": {
+    "id": "candyinfection:gummy_planks",
+    "count": 4
+  }
+}

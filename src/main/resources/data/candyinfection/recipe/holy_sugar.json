@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ECE",
+    "CHC",
+    "ECE"
+  ],
+  "key": {
+    "E": {
+      "item": "candyinfection:candy_essence"
+    },
+    "C": {
+      "item": "candyinfection:purification_crystal"
+    },
+    "H": {
+      "item": "candyinfection:hardened_sugar"
+    }
+  },
+  "result": {
+    "id": "candyinfection:holy_sugar",
+    "count": 1
+  }
+}

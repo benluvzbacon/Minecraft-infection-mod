@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "candyinfection:gummy_leaves",
+    "candyinfection:gummy_growth",
+    "candyinfection:chocolate_growth",
+    "candyinfection:candy_vines",
+    "candyinfection:sticky_syrup",
+    "candyinfection:caramel_growth",
+    "candyinfection:chocolate_blob"
+  ]
+}

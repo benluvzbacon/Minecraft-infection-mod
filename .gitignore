@@ -1,0 +1,26 @@
+# Gradle
+.gradle/
+build/
+out/
+classes/
+
+# Eclipse / IDEA
+*.launch
+.classpath
+.project
+.settings/
+bin/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# Loom / run directory
+run/
+remappedSrc/
+
+# Generated resource staging (regenerate with tools/generate_resources.py)
+tools/__pycache__/

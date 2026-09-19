@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " SR",
+    "S R",
+    " SR"
+  ],
+  "key": {
+    "S": {
+      "item": "candyinfection:sugar_shard"
+    },
+    "R": {
+      "item": "candyinfection:gummy_resin"
+    }
+  },
+  "result": {
+    "id": "candyinfection:candy_bow",
+    "count": 1
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "candyinfection:block/sugar_crystal_cluster"
+  }
+}

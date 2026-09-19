@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "candyinfection:block/infected_grass_block"
+    }
+  }
+}

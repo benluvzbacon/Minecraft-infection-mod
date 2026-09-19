@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "candyinfection:infection_crystal"
+    },
+    {
+      "item": "candyinfection:sugar_shard"
+    },
+    {
+      "item": "candyinfection:purification_crystal"
+    }
+  ],
+  "result": {
+    "id": "candyinfection:candy_essence",
+    "count": 1
+  }
+}

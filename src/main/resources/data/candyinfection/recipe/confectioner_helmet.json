@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "candyinfection:chocolate_core"
+    }
+  },
+  "result": {
+    "id": "candyinfection:confectioner_helmet",
+    "count": 1
+  }
+}

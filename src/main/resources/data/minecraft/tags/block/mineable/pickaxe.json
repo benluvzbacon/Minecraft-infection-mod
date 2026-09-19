@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "candyinfection:candy_stone",
+    "candyinfection:candy_bricks",
+    "candyinfection:sugar_crystal_ore",
+    "candyinfection:sugar_crystal_block",
+    "candyinfection:hard_candy_pink",
+    "candyinfection:hard_candy_red",
+    "candyinfection:hard_candy_purple",
+    "candyinfection:hard_candy_cyan",
+    "candyinfection:infection_core",
+    "candyinfection:purifier",
+    "candyinfection:sugar_crystal_cluster"
+  ]
+}

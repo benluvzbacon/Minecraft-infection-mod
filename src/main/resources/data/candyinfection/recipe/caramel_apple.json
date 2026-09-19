@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CAC",
+    " T "
+  ],
+  "key": {
+    "C": {
+      "item": "candyinfection:caramel_chunk"
+    },
+    "A": {
+      "item": "minecraft:apple"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "candyinfection:caramel_apple",
+    "count": 1
+  }
+}

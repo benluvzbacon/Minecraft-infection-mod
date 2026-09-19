@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "candyinfection:sugar_crystal_block"
+    }
+  ],
+  "result": {
+    "id": "candyinfection:sugar_shard",
+    "count": 9
+  }
+}

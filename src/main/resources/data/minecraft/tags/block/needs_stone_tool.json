@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "candyinfection:candy_stone",
+    "candyinfection:candy_bricks",
+    "candyinfection:sugar_crystal_block"
+  ]
+}

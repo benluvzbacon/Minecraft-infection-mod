@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "JJJ",
+    "JHJ",
+    " T "
+  ],
+  "key": {
+    "J": {
+      "item": "candyinfection:jawbreaker_fragment"
+    },
+    "H": {
+      "item": "candyinfection:hardened_sugar"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "candyinfection:jawbreaker_mace",
+    "count": 1
+  }
+}

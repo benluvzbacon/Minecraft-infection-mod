@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "candyinfection:block/infection_core"
+    }
+  }
+}

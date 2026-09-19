@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "candyinfection:block/gummy_planks",
+    "side": "candyinfection:block/gummy_log"
+  }
+}

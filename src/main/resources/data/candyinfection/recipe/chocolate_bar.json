@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CC",
+    "CC"
+  ],
+  "key": {
+    "C": {
+      "item": "candyinfection:chocolate_core"
+    }
+  },
+  "result": {
+    "id": "candyinfection:chocolate_bar",
+    "count": 2
+  }
+}

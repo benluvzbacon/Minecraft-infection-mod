@@ -1,0 +1,31 @@
+{
+  "values": [
+    "candyinfection:infected_grass_block",
+    "candyinfection:infected_dirt",
+    "candyinfection:candy_stone",
+    "candyinfection:candy_bricks",
+    "candyinfection:sugar_crystal_ore",
+    "candyinfection:sugar_crystal_block",
+    "candyinfection:candy_sand",
+    "candyinfection:candy_gravel",
+    "candyinfection:sticky_syrup",
+    "candyinfection:caramel_growth",
+    "candyinfection:gummy_planks",
+    "candyinfection:gummy_leaves",
+    "candyinfection:chocolate_blob",
+    "candyinfection:lollipop_pink",
+    "candyinfection:lollipop_blue",
+    "candyinfection:lollipop_red",
+    "candyinfection:lollipop_yellow",
+    "candyinfection:hard_candy_pink",
+    "candyinfection:hard_candy_red",
+    "candyinfection:hard_candy_purple",
+    "candyinfection:hard_candy_cyan",
+    "candyinfection:infection_core",
+    "candyinfection:gummy_growth",
+    "candyinfection:chocolate_growth",
+    "candyinfection:candy_vines",
+    "candyinfection:gummy_log",
+    "candyinfection:sugar_crystal_cluster"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "candyinfection:caramel_growth"
+  },
+  "result": {
+    "id": "candyinfection:caramel_chunk"
+  },
+  "experience": 0.2,
+  "cookingtime": 200
+}

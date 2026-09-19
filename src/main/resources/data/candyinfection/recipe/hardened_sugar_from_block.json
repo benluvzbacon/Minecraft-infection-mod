@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B"
+  ],
+  "key": {
+    "B": {
+      "item": "candyinfection:sugar_crystal_block"
+    }
+  },
+  "result": {
+    "id": "candyinfection:hardened_sugar",
+    "count": 9
+  }
+}

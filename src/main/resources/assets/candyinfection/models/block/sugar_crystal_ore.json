@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "candyinfection:block/sugar_crystal_ore"
+  }
+}

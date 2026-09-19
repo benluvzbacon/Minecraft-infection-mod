@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "candyinfection:chocolate_blob"
+  },
+  "result": {
+    "id": "candyinfection:chocolate_core"
+  },
+  "experience": 0.4,
+  "cookingtime": 200
+}

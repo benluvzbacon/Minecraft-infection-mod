@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PCP"
+  ],
+  "key": {
+    "P": {
+      "item": "candyinfection:purification_crystal"
+    },
+    "C": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "id": "candyinfection:purification_potion",
+    "count": 2
+  }
+}

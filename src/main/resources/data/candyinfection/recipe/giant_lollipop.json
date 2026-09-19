@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HHH",
+    "HHH",
+    " T "
+  ],
+  "key": {
+    "H": {
+      "item": "candyinfection:hardened_sugar"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "candyinfection:giant_lollipop",
+    "count": 1
+  }
+}

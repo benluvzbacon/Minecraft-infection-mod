@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  H",
+    " G ",
+    "T  "
+  ],
+  "key": {
+    "H": {
+      "item": "candyinfection:hardened_sugar"
+    },
+    "G": {
+      "item": "candyinfection:gummy_resin"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "candyinfection:gummy_spear",
+    "count": 1
+  }
+}

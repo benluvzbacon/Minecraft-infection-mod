@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "candyinfection:sugar_shard"
+    }
+  },
+  "result": {
+    "id": "candyinfection:candy_chestplate",
+    "count": 1
+  }
+}

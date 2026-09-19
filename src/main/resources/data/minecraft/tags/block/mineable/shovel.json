@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "candyinfection:infected_grass_block",
+    "candyinfection:infected_dirt",
+    "candyinfection:candy_sand",
+    "candyinfection:candy_gravel"
+  ]
+}

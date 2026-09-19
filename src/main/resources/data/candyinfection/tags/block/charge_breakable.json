@@ -1,0 +1,17 @@
+{
+  "values": [
+    "#minecraft:leaves",
+    "minecraft:tall_grass",
+    "minecraft:short_grass",
+    "minecraft:fern",
+    "minecraft:large_fern",
+    "#minecraft:flowers",
+    "minecraft:snow",
+    "minecraft:vine",
+    "minecraft:glass",
+    "minecraft:glass_pane",
+    "candyinfection:candy_vines",
+    "candyinfection:gummy_growth",
+    "candyinfection:chocolate_growth"
+  ]
+}

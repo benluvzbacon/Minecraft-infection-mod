@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " H ",
+    "PIP",
+    " N "
+  ],
+  "key": {
+    "H": {
+      "item": "candyinfection:holy_sugar"
+    },
+    "P": {
+      "item": "candyinfection:purification_crystal"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "N": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "result": {
+    "id": "candyinfection:anti_candy_syringe",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    " C ",
+    " R "
+  ],
+  "key": {
+    "C": {
+      "item": "candyinfection:caramel_chunk"
+    },
+    "R": {
+      "item": "candyinfection:gummy_resin"
+    }
+  },
+  "result": {
+    "id": "candyinfection:caramel_blade",
+    "count": 1
+  }
+}

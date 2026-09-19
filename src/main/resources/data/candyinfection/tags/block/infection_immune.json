@@ -1,0 +1,14 @@
+{
+  "values": [
+    "minecraft:obsidian",
+    "minecraft:crying_obsidian",
+    "minecraft:bedrock",
+    "minecraft:barrier",
+    "minecraft:bedrock",
+    "minecraft:end_portal_frame",
+    "minecraft:respawn_anchor",
+    "minecraft:beacon",
+    "minecraft:enchanting_table",
+    "candyinfection:purifier"
+  ]
+}

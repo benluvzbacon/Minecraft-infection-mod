@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "candyinfection:infection_core",
+    "candyinfection:purifier",
+    "candyinfection:sugar_crystal_ore"
+  ]
+}

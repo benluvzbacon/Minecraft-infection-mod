@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:villager",
+    "minecraft:wandering_trader",
+    "minecraft:iron_golem",
+    "minecraft:snow_golem",
+    "minecraft:warden",
+    "minecraft:ender_dragon",
+    "minecraft:wither"
+  ]
+}

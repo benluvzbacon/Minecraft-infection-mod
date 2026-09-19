@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SAS",
+    " T "
+  ],
+  "key": {
+    "S": {
+      "item": "candyinfection:sugar_shard"
+    },
+    "A": {
+      "item": "minecraft:apple"
+    },
+    "T": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "candyinfection:candy_apple",
+    "count": 1
+  }
+}
