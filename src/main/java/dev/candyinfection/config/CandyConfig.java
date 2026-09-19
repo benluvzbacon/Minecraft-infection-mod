@@ -28,29 +28,29 @@ public final class CandyConfig {
 
     // ---------------------------------------------------------------- spreading
     /** Multiplier applied to every infection spread chance. */
-    public float spreadSpeedMultiplier = 1.0F;
+    public float spreadSpeedMultiplier = 3.5F;
     /** How many spread attempts the simulation may perform per server tick, per loaded dimension. */
-    public int maxSpreadOperationsPerTick = 24;
+    public int maxSpreadOperationsPerTick = 96;
     /** Maximum size of the pending spread queue before new entries are dropped. */
-    public int maxSpreadQueueSize = 8192;
+    public int maxSpreadQueueSize = 16384;
     /** Base chance (0..1) that an infected block tries to infect a neighbour on a random tick. */
-    public float baseSpreadChance = 0.18F;
+    public float baseSpreadChance = 0.45F;
     /** Hard cap, in blocks, on how far a single infection front may travel from its seed. */
-    public int maxInfectionRadius = 1024;
+    public int maxInfectionRadius = 2048;
     /** Random tick speed applied to infected blocks (vanilla random tick rate is used when <= 0). */
     public int infectedBlockTickRate = 1;
 
     // ------------------------------------------------------------------- mobs
     /** Multiplier applied to candy monster spawn attempts. */
-    public float monsterSpawnMultiplier = 1.0F;
+    public float monsterSpawnMultiplier = 1.8F;
     /** Whether candy monsters are added to the vanilla biome spawn tables. */
     public boolean monsterSpawningEnabled = true;
     /** Whether the infection may build candy structures and nests as it advances. */
     public boolean structuresEnabled = true;
     /** Per-dimension cap on simultaneously alive candy monsters. */
-    public int maxCandyMonsters = 90;
+    public int maxCandyMonsters = 120;
     /** Per-dimension cap on the small gummy spawn creatures. */
-    public int maxGummySpawns = 60;
+    public int maxGummySpawns = 80;
     /** Whether vanilla mobs can be turned into infected variants. */
     public boolean infectVanillaMobs = true;
     /** Ticks a vanilla mob must stand on infected ground before it can turn (0 disables the timer). */
@@ -87,7 +87,11 @@ public final class CandyConfig {
     /** Whether the infection stage may advance over time (false freezes progression). */
     public boolean difficultyScalingEnabled = true;
     /** Seconds of active infection required to advance one infection stage. */
-    public int secondsPerStage = 1500;
+    public int secondsPerStage = 600;
+    /** Whether candy shrines (starting structures) generate naturally in the overworld. */
+    public boolean shrineGenerationEnabled = true;
+    /** Chance per chunk (0..1) that a candy shrine tries to generate. */
+    public float shrineSpawnChance = 0.015F;
     /** Damage multiplier applied to candy monster attacks. */
     public float infectionDamageMultiplier = 1.0F;
     /** Whether infected blocks slowly decay back to their vanilla form when no core feeds them. */

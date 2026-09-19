@@ -90,14 +90,64 @@ public final class InfectionRuntime {
         }
 
         // 1b. aggressive core-driven spread: even if queue is empty, cores keep pushing
-        // This ensures infection starts even if random ticks are slow.
-        if (tick % 10 == 0 && data.getCoreCount() > 0) {
+        // This ensures infection starts even if random ticks are slow. Made MUCH faster per user request.
+        if (tick % 5 == 0 && data.getCoreCount() > 0) {
             BlockPos core = data.nearestCore(world.getPlayers().isEmpty() ? BlockPos.ORIGIN : world.getPlayers().get(0).getBlockPos());
             if (core != null) {
-                // Enqueue a few positions near core to keep spread alive
-                for (int i = 0; i < 3; i++) {
-                    BlockPos p = core.add(RANDOM.nextInt(15) - 7, RANDOM.nextInt(7) - 3, RANDOM.nextInt(15) - 7);
+                // Enqueue many positions near core to keep spread alive and fast
+                for (int i = 0; i < 8; i++) {
+                    BlockPos p = core.add(RANDOM.nextInt(21) - 10, RANDOM.nextInt(9) - 4, RANDOM.nextInt(21) - 10);
                     enqueue(world, p);
+                }
+                // Also directly convert nearby blocks every tick for visible fast spread
+                if (tick % 20 == 0) {
+                    for (int i = 0; i < 12; i++) {
+                        BlockPos target = core.add(RANDOM.nextInt(17) - 8, RANDOM.nextInt(7) - 3, RANDOM.nextInt(17) - 8);
+                        var state = world.getBlockState(target);
+                        var conv = InfectionConversions.get(state.getBlock());
+                        if (conv != null) {
+                            InfectionSpread.convert(world, target, state, conv.toCandy().apply(state));
+                        }
+                    }
+                }
+            }
+        }
+
+        // 1c. natural shrine generation - rare candy shrines that spawn in overworld so players
+        // can find infection without commands. This is the "structure that spawned so you can start
+        // the infection yourself" that user requested.
+        if (config.worldGenEnabled && config.shrineGenerationEnabled && tick % 200 == 0 && !world.getPlayers().isEmpty()) {
+            if (RANDOM.nextFloat() < config.shrineSpawnChance * 2.0f) {
+                try {
+                    // Pick a random player and try to spawn shrine 100-300 blocks away
+                    var player = world.getPlayers().get(RANDOM.nextInt(world.getPlayers().size()));
+                    BlockPos playerPos = player.getBlockPos();
+                    // Don't spawn too close to existing cores
+                    BlockPos nearestCore = data.nearestCore(playerPos);
+                    if (nearestCore == null || nearestCore.getSquaredDistance(playerPos) > 800 * 800) {
+                        int angle = RANDOM.nextInt(360);
+                        int dist = 150 + RANDOM.nextInt(200);
+                        int x = playerPos.getX() + (int)(Math.cos(Math.toRadians(angle)) * dist);
+                        int z = playerPos.getZ() + (int)(Math.sin(Math.toRadians(angle)) * dist);
+                        BlockPos shrinePos = new BlockPos(x, 0, z);
+                        // Only spawn if no core within 500 blocks of shrine pos
+                        BlockPos nearCore = data.nearestCore(shrinePos);
+                        if (nearCore == null || nearCore.getSquaredDistance(shrinePos) > 500 * 500) {
+                            int built = dev.candyinfection.world.gen.CandyShrineStructure.build(world, shrinePos, data);
+                            if (built > 20) {
+                                CandyLog.init("Candy shrine generated at " + shrinePos.toShortString() + " (" + built + " blocks) - players can now find infection naturally");
+                                // Announce to nearby players
+                                for (var p : world.getPlayers()) {
+                                    if (p.getBlockPos().getSquaredDistance(shrinePos) < 400 * 400) {
+                                        p.sendMessage(net.minecraft.text.Text.translatable("message.candyinfection.shrine_found",
+                                                shrinePos.getX(), shrinePos.getZ()).formatted(net.minecraft.util.Formatting.LIGHT_PURPLE), false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    CandyLog.debug("Shrine generation failed: " + e.getMessage());
                 }
             }
         }
@@ -137,30 +187,52 @@ public final class InfectionRuntime {
         // 4. monster caps ----------------------------------------------------
         MONSTER_COUNTS.put(world.getRegistryKey(), countMonsters(world));
 
-        // 5. region growth & structure building (NEW: actually makes candy biomes and structures appear)
-        if (config.structuresEnabled && data.getTotalInfected() > 20 && RANDOM.nextInt(4) == 0) {
+        // 5. region growth & structure building - now focuses on lollipops/candy per user request, NO gummy groves
+        if (config.structuresEnabled && data.getTotalInfected() > 10 && RANDOM.nextInt(3) == 0) {
             try {
                 BlockPos center = data.nearestCore(world.getPlayers().isEmpty() ? BlockPos.ORIGIN : world.getPlayers().get(0).getBlockPos());
                 if (center == null && !world.getPlayers().isEmpty()) {
                     center = world.getPlayers().get(0).getBlockPos();
                 }
                 if (center != null) {
-                    // Grow a random chunk near infection
-                    BlockPos growPos = center.add(RANDOM.nextInt(33) - 16, 0, RANDOM.nextInt(33) - 16);
-                    net.minecraft.util.math.ChunkPos chunkPos = new net.minecraft.util.math.ChunkPos(growPos);
-                    if (world.isChunkLoaded(chunkPos.x, chunkPos.z)) {
-                        dev.candyinfection.world.gen.CandyRegionGenerator.growChunk(world, chunkPos, RANDOM.nextInt(16), RANDOM.nextInt(16), data);
+                    // Grow a random chunk near infection - more frequent now
+                    for (int i = 0; i < 2; i++) {
+                        BlockPos growPos = center.add(RANDOM.nextInt(41) - 20, 0, RANDOM.nextInt(41) - 20);
+                        net.minecraft.util.math.ChunkPos chunkPos = new net.minecraft.util.math.ChunkPos(growPos);
+                        if (world.isChunkLoaded(chunkPos.x, chunkPos.z)) {
+                            dev.candyinfection.world.gen.CandyRegionGenerator.growChunk(world, chunkPos, RANDOM.nextInt(16), RANDOM.nextInt(16), data);
+                        }
                     }
-                    // Occasionally build a structure
-                    if (RANDOM.nextInt(8) == 0) {
-                        String[] kinds = dev.candyinfection.world.gen.CandyStructures.kinds();
-                        String kind = kinds[RANDOM.nextInt(kinds.length)];
-                        BlockPos structPos = center.add(RANDOM.nextInt(41) - 20, 0, RANDOM.nextInt(41) - 20);
+                    // Build candy structures - user wants lollipops and candy, NOT gummy groves
+                    if (RANDOM.nextInt(4) == 0) {
+                        String kind = switch (RANDOM.nextInt(4)) {
+                            case 0 -> dev.candyinfection.world.gen.CandyStructures.LOLLIPOP_FIELD;
+                            case 1 -> dev.candyinfection.world.gen.CandyStructures.HARD_CANDY_ARCH;
+                            case 2 -> dev.candyinfection.world.gen.CandyStructures.SUGAR_SPIRE;
+                            default -> dev.candyinfection.world.gen.CandyStructures.CHOCOLATE_MOUND;
+                        };
+                        BlockPos structPos = center.add(RANDOM.nextInt(51) - 25, 0, RANDOM.nextInt(51) - 25);
                         dev.candyinfection.world.gen.CandyStructures.build(world, structPos, kind, data);
                     }
-                    // Occasionally build a nest
-                    if (data.getNestCount() < 12 && RANDOM.nextInt(12) == 0) {
-                        BlockPos nestPos = center.add(RANDOM.nextInt(31) - 15, 0, RANDOM.nextInt(31) - 15);
+                    // Extra lollipop clusters for user request
+                    if (RANDOM.nextInt(3) == 0) {
+                        for (int i = 0; i < 3; i++) {
+                            BlockPos lollyPos = center.add(RANDOM.nextInt(31) - 15, 0, RANDOM.nextInt(31) - 15);
+                            int y = world.getTopY(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING, lollyPos.getX(), lollyPos.getZ());
+                            if (y > 1) {
+                                BlockPos p = new BlockPos(lollyPos.getX(), y + 1, lollyPos.getZ());
+                                if (world.isAir(p)) {
+                                    world.setBlockState(p, dev.candyinfection.init.CandyBlocks.LOLLIPOP_PINK.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                                    if (RANDOM.nextBoolean()) {
+                                        world.setBlockState(p.up(), dev.candyinfection.init.CandyBlocks.LOLLIPOP_BLUE.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Nests - more frequent for scarier infection
+                    if (data.getNestCount() < 16 && RANDOM.nextInt(6) == 0) {
+                        BlockPos nestPos = center.add(RANDOM.nextInt(35) - 17, 0, RANDOM.nextInt(35) - 17);
                         dev.candyinfection.world.gen.CandyStructures.build(world, nestPos, dev.candyinfection.world.gen.CandyStructures.INFECTION_NEST, data);
                     }
                 }

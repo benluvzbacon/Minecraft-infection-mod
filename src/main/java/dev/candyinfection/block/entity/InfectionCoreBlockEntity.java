@@ -65,61 +65,70 @@ public class InfectionCoreBlockEntity extends BlockEntity {
         }
 
         // Spreading: the core is a much stronger source than a normal block.
-        // FIXED: previously it enqueued random positions that were not infected,
-        // so spreadFrom() would immediately reject them. Now we directly convert
-        // nearby vanilla blocks and also enqueue already-infected blocks to keep
-        // the chain going.
+        // ULTRA FAST per user request - infection should be scary and not underestimated.
         if (--this.spreadCooldown <= 0) {
-            this.spreadCooldown = Math.max(3, 18 - stage * 3);
-            int attempts = 8 + stage * 4;
+            this.spreadCooldown = Math.max(1, 10 - stage * 2); // Was 3-18, now 1-10 = much faster
+            int attempts = 16 + stage * 8; // Was 8+stage*4, now double
             for (int i = 0; i < attempts; i++) {
-                BlockPos target = pos.add(world.random.nextInt(25) - 12, world.random.nextInt(11) - 5, world.random.nextInt(25) - 12);
+                BlockPos target = pos.add(world.random.nextInt(31) - 15, world.random.nextInt(13) - 6, world.random.nextInt(31) - 15);
                 BlockState current = world.getBlockState(target);
                 if (InfectionConversions.isInfected(current)) {
                     // Already infected: push it into the spread queue so it spreads further.
                     InfectionRuntime.enqueue(world, target);
+                    // Also enqueue neighbors for chain reaction
+                    if (world.random.nextInt(2) == 0) {
+                        BlockPos n = target.add(world.random.nextInt(3) - 1, 0, world.random.nextInt(3) - 1);
+                        InfectionRuntime.enqueue(world, n);
+                    }
                     continue;
                 }
                 InfectionConversions.Conversion conversion = InfectionConversions.get(current.getBlock());
                 if (conversion != null && conversion.minStage() <= stage) {
-                    // Directly convert - this is what makes the infection actually start.
-                    if (world.random.nextFloat() < 0.75F) {
+                    // Directly convert - 90% chance now (was 75%) for much faster visible spread
+                    if (world.random.nextFloat() < 0.90F) {
                         InfectionSpread.convert(world, target, current, conversion.toCandy().apply(current));
                     }
                 } else if (world.isAir(target)) {
-                    // Sometimes grow candy vegetation in air pockets near the core.
-                    if (world.random.nextInt(4) == 0) {
+                    // Grow candy vegetation + lollipops in air pockets - more frequent
+                    if (world.random.nextInt(2) == 0) {
                         BlockState growth = InfectionConversions.randomVegetation(world.random, stage);
+                        // 40% chance to be lollipop specifically per user request
+                        if (world.random.nextInt(100) < 40) {
+                            growth = InfectionConversions.randomLollipop(world.random).getDefaultState();
+                        }
                         if (growth != null && growth.canPlaceAt(world, target)) {
                             InfectionSpread.convert(world, target, current, growth);
                         }
                     }
                 }
             }
-            // Also keep the core's own chunk active by enqueuing nearby infected blocks.
-            for (int i = 0; i < 6; i++) {
-                BlockPos near = pos.add(world.random.nextInt(9) - 4, world.random.nextInt(5) - 2, world.random.nextInt(9) - 4);
+            // Keep core's chunk super active
+            for (int i = 0; i < 12; i++) {
+                BlockPos near = pos.add(world.random.nextInt(13) - 6, world.random.nextInt(5) - 2, world.random.nextInt(13) - 6);
                 if (InfectionConversions.isInfected(world.getBlockState(near))) {
                     InfectionRuntime.enqueue(world, near);
                 }
             }
         }
 
-        // Monster spawning.
+        // Monster spawning - more frequent for scarier infection
         if (--this.spawnCooldown <= 0) {
-            this.spawnCooldown = Math.max(80, 700 - stage * 150);
+            this.spawnCooldown = Math.max(40, 400 - stage * 100); // Was 80-700, now 40-400 = 2x faster
             InfectionRuntime.spawnMonster(world, pos, false);
-            if (stage >= 2) {
+            if (stage >= 1) {
+                InfectionRuntime.spawnMonster(world, pos, false);
+            }
+            if (stage >= 3) {
                 InfectionRuntime.spawnMonster(world, pos, false);
             }
             if (stage >= 4) {
-                InfectionRuntime.spawnMonster(world, pos, false);
+                InfectionRuntime.spawnMonster(world, pos, true); // Ignore cap at high stage
             }
         }
 
-        // Growing candy structures.
+        // Growing candy structures - now focuses on lollipops and candy, not gummy groves per user
         if (--this.growCooldown <= 0) {
-            this.growCooldown = Math.max(200, 1800 - stage * 400);
+            this.growCooldown = Math.max(100, 1000 - stage * 250); // Was 200-1800, now 100-1000 = faster
             this.growStructure(world, pos, stage);
         }
 
@@ -131,60 +140,87 @@ public class InfectionCoreBlockEntity extends BlockEntity {
     }
 
     private void growStructure(ServerWorld world, BlockPos pos, int stage) {
-        int radius = 8 + stage * 2;
-        // Convert ground around core to candy - more aggressive now.
-        for (int i = 0; i < 32 + stage * 16; i++) {
+        int radius = 12 + stage * 3; // Was 8+stage*2, now larger
+        // Convert ground around core to candy - ULTRA aggressive per user request
+        for (int i = 0; i < 64 + stage * 24; i++) { // Was 32+stage*16, now double
             BlockPos target = pos.add(world.random.nextInt(radius * 2 + 1) - radius,
-                    world.random.nextInt(7) - 3,
+                    world.random.nextInt(9) - 4,
                     world.random.nextInt(radius * 2 + 1) - radius);
             BlockState current = world.getBlockState(target);
             InfectionConversions.Conversion conversion = InfectionConversions.get(current.getBlock());
             if (conversion != null && conversion.minStage() <= stage) {
                 InfectionSpread.convert(world, target, current, conversion.toCandy().apply(current));
-            } else if (world.isAir(target) && world.random.nextInt(4) == 0) {
-                BlockState growth = InfectionConversions.randomVegetation(world.random, stage);
-                if (growth != null && growth.canPlaceAt(world, target)) {
-                    InfectionSpread.convert(world, target, current, growth);
+            } else if (world.isAir(target)) {
+                // 50% chance to grow something in air - more lollipops per user request
+                if (world.random.nextInt(2) == 0) {
+                    BlockState growth;
+                    int roll = world.random.nextInt(100);
+                    if (roll < 45) {
+                        // 45% lollipops - user wants lollipops and candy stuff
+                        growth = InfectionConversions.randomLollipop(world.random).getDefaultState();
+                    } else if (roll < 70) {
+                        growth = CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
+                                .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, world.random.nextInt(3));
+                    } else if (roll < 85) {
+                        growth = InfectionConversions.randomHardCandy(world.random).getDefaultState();
+                    } else {
+                        growth = InfectionConversions.randomVegetation(world.random, stage);
+                    }
+                    if (growth != null && growth.canPlaceAt(world, target)) {
+                        InfectionSpread.convert(world, target, current, growth);
+                    }
                 }
             }
         }
-        // Occasionally build a real candy structure (gummy grove, arch, mound, spire, lollipop field)
-        // and always have a chance to build a nest. This makes the world feel infested.
-        if (world.random.nextInt(3) == 0) {
+        // Build candy structures - user said "dont add gummy structures" but wants lollipops and candy
+        // So we now build ONLY lollipop fields, hard candy arches, sugar spires, chocolate mounds - NO gummy groves
+        if (world.random.nextInt(2) == 0) { // Was 1/3 chance, now 1/2 = more frequent
             try {
-                String kind = switch (world.random.nextInt(5)) {
-                    case 0 -> dev.candyinfection.world.gen.CandyStructures.GUMMY_GROVE;
+                String kind = switch (world.random.nextInt(4)) {
+                    case 0 -> dev.candyinfection.world.gen.CandyStructures.LOLLIPOP_FIELD; // Most common per user
                     case 1 -> dev.candyinfection.world.gen.CandyStructures.HARD_CANDY_ARCH;
-                    case 2 -> dev.candyinfection.world.gen.CandyStructures.CHOCOLATE_MOUND;
-                    case 3 -> dev.candyinfection.world.gen.CandyStructures.SUGAR_SPIRE;
-                    default -> dev.candyinfection.world.gen.CandyStructures.LOLLIPOP_FIELD;
+                    case 2 -> dev.candyinfection.world.gen.CandyStructures.SUGAR_SPIRE;
+                    default -> dev.candyinfection.world.gen.CandyStructures.CHOCOLATE_MOUND;
                 };
-                BlockPos structurePos = pos.add(world.random.nextInt(17) - 8, 0, world.random.nextInt(17) - 8);
+                BlockPos structurePos = pos.add(world.random.nextInt(21) - 10, 0, world.random.nextInt(21) - 10);
                 dev.candyinfection.world.gen.CandyStructures.build(world, structurePos, kind, InfectionWorldState.get(world));
             } catch (Exception ignored) {
-                // Structure building is best-effort - never crash the core tick.
             }
         }
-        // Nests are rarer but important - they are spawn points for monsters.
-        if (stage >= 2 && world.random.nextInt(6) == 0) {
+        // Extra lollipop clusters - user specifically wants lollipops
+        if (world.random.nextInt(3) == 0) {
             try {
-                BlockPos nestPos = pos.add(world.random.nextInt(21) - 10, 0, world.random.nextInt(21) - 10);
+                for (int i = 0; i < 5; i++) {
+                    BlockPos lollyPos = pos.add(world.random.nextInt(13) - 6, 0, world.random.nextInt(13) - 6);
+                    int y = world.getTopY(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING, lollyPos.getX(), lollyPos.getZ());
+                    if (y > 1) {
+                        BlockPos p = new BlockPos(lollyPos.getX(), y + 1, lollyPos.getZ());
+                        if (world.isAir(p)) {
+                            world.setBlockState(p, InfectionConversions.randomLollipop(world.random).getDefaultState(), Block.NOTIFY_LISTENERS);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
+        // Nests are important for monster spawning
+        if (stage >= 1 && world.random.nextInt(4) == 0) { // Was stage>=2 and 1/6, now stage>=1 and 1/4 = more nests
+            try {
+                BlockPos nestPos = pos.add(world.random.nextInt(25) - 12, 0, world.random.nextInt(25) - 12);
                 dev.candyinfection.world.gen.CandyStructures.build(world, nestPos, dev.candyinfection.world.gen.CandyStructures.INFECTION_NEST, InfectionWorldState.get(world));
             } catch (Exception ignored) {
             }
         }
     }
 
-    /** Registers the core with the world state and immediately starts infection. */
+    /** Registers the core with the world state and immediately starts infection - ULTRA FAST */
     public void onPlaced() {
         if (this.world instanceof ServerWorld serverWorld) {
             InfectionWorldState state = InfectionWorldState.get(serverWorld);
             state.addCore(this.pos);
-            // Immediately infect a small radius so players see the infection start
-            // without waiting for random ticks. This fixes "broke core and nothing happened".
-            int initialRadius = 8;
+            // Immediately infect a LARGER radius so players see scary fast infection - user wants it fast
+            int initialRadius = 12; // Was 8, now 12
             int converted = 0;
-            for (BlockPos target : BlockPos.iterate(this.pos.add(-initialRadius, -3, -initialRadius), this.pos.add(initialRadius, 3, initialRadius))) {
+            for (BlockPos target : BlockPos.iterate(this.pos.add(-initialRadius, -4, -initialRadius), this.pos.add(initialRadius, 4, initialRadius))) {
                 if (this.pos.getSquaredDistance(target) > initialRadius * initialRadius) continue;
                 BlockState current = serverWorld.getBlockState(target);
                 if (current.isAir()) continue;
@@ -192,29 +228,47 @@ public class InfectionCoreBlockEntity extends BlockEntity {
                 if (conv != null) {
                     InfectionSpread.convert(serverWorld, target, current, conv.toCandy().apply(current));
                     converted++;
-                    if (converted > 120) break; // budget initial burst
+                    if (converted > 250) break; // Was 120, now 250 = bigger initial burst
                 }
             }
-            // Also place some initial candy growth so it looks infested right away
-            for (int i = 0; i < 24; i++) {
-                BlockPos up = this.pos.add(serverWorld.random.nextInt(9) - 4, 1, serverWorld.random.nextInt(9) - 4);
+            // Place initial candy growth - MORE lollipops per user request
+            for (int i = 0; i < 40; i++) { // Was 24, now 40
+                BlockPos up = this.pos.add(serverWorld.random.nextInt(13) - 6, 1, serverWorld.random.nextInt(13) - 6);
                 if (serverWorld.isAir(up)) {
-                    BlockState growth = InfectionConversions.randomVegetation(serverWorld.random, 1);
+                    BlockState growth;
+                    int roll = serverWorld.random.nextInt(100);
+                    if (roll < 50) {
+                        growth = InfectionConversions.randomLollipop(serverWorld.random).getDefaultState();
+                    } else if (roll < 75) {
+                        growth = CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
+                                .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, serverWorld.random.nextInt(3));
+                    } else {
+                        growth = InfectionConversions.randomVegetation(serverWorld.random, 1);
+                    }
                     if (growth != null && growth.canPlaceAt(serverWorld, up)) {
                         serverWorld.setBlockState(up, growth, Block.NOTIFY_ALL);
                     }
                 }
             }
-            // Enqueue nearby positions so spread continues
-            for (int i = 0; i < 16; i++) {
-                BlockPos q = this.pos.add(serverWorld.random.nextInt(11) - 5, serverWorld.random.nextInt(5) - 2, serverWorld.random.nextInt(11) - 5);
+            // Enqueue MANY positions so spread continues aggressively
+            for (int i = 0; i < 32; i++) { // Was 16, now 32
+                BlockPos q = this.pos.add(serverWorld.random.nextInt(15) - 7, serverWorld.random.nextInt(7) - 3, serverWorld.random.nextInt(15) - 7);
                 InfectionRuntime.enqueue(serverWorld, q);
             }
             serverWorld.playSound(null, this.pos, SoundEvents.BLOCK_BEACON_ACTIVATE, SoundCategory.BLOCKS, 2.0F, 0.7F);
             serverWorld.spawnParticles(CandyParticles.INFECTION_SPARK, this.pos.getX() + 0.5D, this.pos.getY() + 1.0D,
-                    this.pos.getZ() + 0.5D, 80, 3.0D, 2.5D, 3.0D, 0.06D);
-            // Spawn an initial defender so breaking core immediately is not trivial
-            InfectionRuntime.spawnMonster(serverWorld, this.pos, true);
+                    this.pos.getZ() + 0.5D, 120, 4.0D, 3.0D, 4.0D, 0.08D);
+            // Spawn initial defenders - more now for scarier start
+            for (int i = 0; i < 3; i++) {
+                InfectionRuntime.spawnMonster(serverWorld, this.pos, true);
+            }
+            // Immediately build a lollipop field around core so it looks infested
+            try {
+                dev.candyinfection.world.gen.CandyStructures.build(serverWorld, this.pos.add(5, 0, 5),
+                        dev.candyinfection.world.gen.CandyStructures.LOLLIPOP_FIELD, state);
+                dev.candyinfection.world.gen.CandyStructures.build(serverWorld, this.pos.add(-5, 0, -5),
+                        dev.candyinfection.world.gen.CandyStructures.HARD_CANDY_ARCH, state);
+            } catch (Exception ignored) {}
         }
         this.markDirty();
     }

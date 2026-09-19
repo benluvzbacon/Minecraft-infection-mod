@@ -137,6 +137,8 @@
   "message.candyinfection.core_stage": "The Infection Core shudders - stage %s!",
   "message.candyinfection.core_shield": "Core shield reduced to %s",
   "message.candyinfection.core_destroyed": "An Infection Core has been destroyed! The land around it is purging.",
+  "message.candyinfection.shrine_found": "A Candy Shrine has appeared at %s, %s! The infection is spreading from it...",
+  "message.candyinfection.shrine_spawned": "A Candy Shrine with an Infection Core has spawned at %s! Find lollipops and candy there.",
   "message.candyinfection.purifier_status": "Purifier: %s fuel, clearing %s blocks",
   "message.candyinfection.purifier_refuelled": "Purifier refuelled (+%s)",
   "message.candyinfection.stumble": "Your legs give out as the sugar takes hold.",

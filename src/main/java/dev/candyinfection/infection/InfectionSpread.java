@@ -39,7 +39,7 @@ public final class InfectionSpread {
     private InfectionSpread() {
     }
 
-    /** Called from an infected block's random tick. */
+    /** Called from an infected block's random tick. - Made MUCH faster per user request */
     public static void onInfectedBlockTick(ServerWorld world, BlockPos pos, BlockState state, float multiplier) {
         CandyConfig config = CandyConfig.get();
         if (config.spreadSpeedMultiplier <= 0.0F) {
@@ -47,18 +47,45 @@ public final class InfectionSpread {
         }
         InfectionWorldState data = InfectionWorldState.get(world);
         float stageMultiplier = data.stageInfo().spreadMultiplier();
-        float chance = config.baseSpreadChance * multiplier * stageMultiplier * config.spreadSpeedMultiplier;
+        // Increased base chance - user wants fast, scary spread
+        float chance = config.baseSpreadChance * multiplier * stageMultiplier * config.spreadSpeedMultiplier * 1.8f;
         if (InfectionRuntime.isSurgeActive(world)) {
-            chance *= 2.5F;
+            chance *= 3.0F;
         }
-        if (world.random.nextFloat() < Math.min(chance, 0.95F)) {
+        // Much higher chance to enqueue, and also enqueue neighbors directly for faster visible spread
+        if (world.random.nextFloat() < Math.min(chance, 0.98F)) {
             InfectionRuntime.enqueue(world, pos.toImmutable());
+            // 40% chance to also enqueue a random neighbor to accelerate spread
+            if (world.random.nextInt(3) != 0) {
+                BlockPos neighbor = pos.add(world.random.nextInt(3) - 1, world.random.nextInt(3) - 1, world.random.nextInt(3) - 1);
+                InfectionRuntime.enqueue(world, neighbor);
+            }
         }
-        // Dense colonies also sprout vegetation directly.
-        if (world.random.nextInt(90) == 0 && world.isAir(pos.up())) {
+        // Dense colonies also sprout vegetation directly - more frequent now
+        if (world.random.nextInt(35) == 0 && world.isAir(pos.up())) {
             BlockState plant = InfectionConversions.randomVegetation(world.random, data.getStage());
             if (plant != null && plant.canPlaceAt(world, pos.up())) {
                 world.setBlockState(pos.up(), plant, Block.NOTIFY_ALL);
+            }
+        }
+        // Lollipops and other candy goodies now grow more often as infection spreads
+        if (world.random.nextInt(60) == 0) {
+            BlockPos up = pos.up();
+            if (world.isAir(up)) {
+                int roll = world.random.nextInt(100);
+                BlockState candy = null;
+                if (roll < 30) {
+                    candy = InfectionConversions.randomLollipop(world.random).getDefaultState();
+                } else if (roll < 55) {
+                    candy = CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
+                            .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, world.random.nextInt(3));
+                } else if (roll < 75) {
+                    candy = CandyBlocks.HARD_CANDY_PINK.getDefaultState();
+                    if (world.random.nextBoolean()) candy = InfectionConversions.randomHardCandy(world.random).getDefaultState();
+                }
+                if (candy != null && candy.canPlaceAt(world, up)) {
+                    world.setBlockState(up, candy, Block.NOTIFY_ALL);
+                }
             }
         }
     }
@@ -75,7 +102,7 @@ public final class InfectionSpread {
         }
     }
 
-    /** Performs one spread operation for a queued position. */
+    /** Performs one spread operation for a queued position. - Made MUCH faster */
     public static boolean spreadFrom(ServerWorld world, BlockPos pos) {
         BlockState source = world.getBlockState(pos);
         if (!InfectionConversions.isInfected(source)) {
@@ -85,16 +112,26 @@ public final class InfectionSpread {
         CandyConfig config = CandyConfig.get();
         Random random = world.random;
         float stageMultiplier = data.stageInfo().spreadMultiplier();
-        float baseChance = 0.55F * stageMultiplier * config.spreadSpeedMultiplier;
+        // Much higher base chance for faster spread
+        float baseChance = 0.85F * stageMultiplier * config.spreadSpeedMultiplier;
         if (InfectionRuntime.isSurgeActive(world)) {
-            baseChance *= 2.0F;
+            baseChance *= 2.5F;
         }
 
         boolean didSomething = false;
-        int attempts = InfectionRuntime.isSurgeActive(world) ? 4 : 2;
+        // More attempts per operation - 4 normally, 8 during surge (was 2/4)
+        int attempts = InfectionRuntime.isSurgeActive(world) ? 8 : 4;
+        // At higher stages, even more attempts
+        if (data.getStage() >= 4) attempts += 2;
+        if (data.getStage() >= 6) attempts += 2;
+
         for (int i = 0; i < attempts; i++) {
-            BlockPos[] pool = random.nextBoolean() ? HORIZONTAL : (random.nextInt(4) == 0 ? VERTICAL : HORIZONTAL);
+            BlockPos[] pool = random.nextBoolean() ? HORIZONTAL : (random.nextInt(3) == 0 ? VERTICAL : HORIZONTAL);
             BlockPos offset = pool[random.nextInt(pool.length)];
+            // Occasionally try further away for more aggressive spread
+            if (random.nextInt(5) == 0) {
+                offset = offset.add(random.nextInt(3) - 1, random.nextInt(3) - 1, random.nextInt(3) - 1);
+            }
             BlockPos target = pos.add(offset);
             BlockState targetState = world.getBlockState(target);
             if (targetState.isAir()) {
@@ -106,8 +143,12 @@ public final class InfectionSpread {
                 continue;
             }
             float chance = conversion.chance() * baseChance;
-            if (random.nextFloat() < Math.min(chance, 0.98F)) {
+            if (random.nextFloat() < Math.min(chance, 0.99F)) {
                 didSomething |= convert(world, target, targetState, conversion.toCandy().apply(targetState));
+                // Chain reaction: if we converted, immediately try to spread from new block 30% of time
+                if (didSomething && random.nextInt(3) == 0) {
+                    InfectionRuntime.enqueue(world, target);
+                }
             }
         }
         return didSomething;
@@ -163,8 +204,8 @@ public final class InfectionSpread {
                                 4, 0.4D, 0.3D, 0.4D, 0.01D);
                     }
                 }
-                // Re-queue so the new block keeps spreading.
-                if (world.random.nextInt(3) == 0) {
+                // Re-queue so the new block keeps spreading - now 70% chance instead of 33% for faster spread
+                if (world.random.nextInt(10) < 7) {
                     InfectionRuntime.enqueue(world, pos.toImmutable());
                 }
                 return true;
