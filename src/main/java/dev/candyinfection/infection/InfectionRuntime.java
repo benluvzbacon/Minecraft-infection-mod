@@ -241,6 +241,66 @@ public final class InfectionRuntime {
             }
         }
 
+        // 5b. CLEANER LOOK: Cleanup leftover grass/dirt/stone that was missed - budgeted so it won't crash
+        // User reported lots of grass blocks left behind still being infected - this fixes it
+        if (data.getTotalInfected() > 30 && RANDOM.nextInt(2) == 0) {
+            try {
+                BlockPos center = data.nearestCore(world.getPlayers().isEmpty() ? BlockPos.ORIGIN : world.getPlayers().get(0).getBlockPos());
+                if (center != null) {
+                    // Budgeted cleanup: only 40 random positions per 5 seconds, not instant full scan
+                    // This makes infection look clean without instantly converting everything and crashing
+                    for (int i = 0; i < 40; i++) {
+                        BlockPos target = center.add(RANDOM.nextInt(41) - 20, RANDOM.nextInt(9) - 4, RANDOM.nextInt(41) - 20);
+                        var targetState = world.getBlockState(target);
+                        var targetBlock = targetState.getBlock();
+                        // Only cleanup if surrounded by infected blocks (dense colony) - ensures cleaner look
+                        // Check if nearby has infected blocks
+                        boolean nearInfected = false;
+                        for (int dx = -1; dx <= 1 && !nearInfected; dx++) {
+                            for (int dz = -1; dz <= 1 && !nearInfected; dz++) {
+                                for (int dy = -1; dy <= 1 && !nearInfected; dy++) {
+                                    if (dx == 0 && dy == 0 && dz == 0) continue;
+                                    BlockPos n = target.add(dx, dy, dz);
+                                    if (InfectionConversions.isInfected(world.getBlockState(n))) {
+                                        nearInfected = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (!nearInfected) continue;
+
+                        // Convert leftover vanilla blocks that make infection look messy
+                        if (targetBlock == net.minecraft.block.Blocks.GRASS_BLOCK) {
+                            world.setBlockState(target, dev.candyinfection.init.CandyBlocks.INFECTED_GRASS_BLOCK.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                            data.addChunkCount(target, 1);
+                            data.blockInfected();
+                        } else if (targetBlock == net.minecraft.block.Blocks.DIRT || targetBlock == net.minecraft.block.Blocks.COARSE_DIRT ||
+                                   targetBlock == net.minecraft.block.Blocks.PODZOL || targetBlock == net.minecraft.block.Blocks.ROOTED_DIRT) {
+                            world.setBlockState(target, dev.candyinfection.init.CandyBlocks.INFECTED_DIRT.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                            data.addChunkCount(target, 1);
+                            data.blockInfected();
+                        } else if (targetBlock == net.minecraft.block.Blocks.STONE || targetBlock == net.minecraft.block.Blocks.COBBLESTONE) {
+                            if (RANDOM.nextInt(3) == 0) { // 33% chance for stone to avoid too fast
+                                world.setBlockState(target, dev.candyinfection.init.CandyBlocks.CANDY_STONE.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                                data.addChunkCount(target, 1);
+                                data.blockInfected();
+                            }
+                        } else if (targetBlock == net.minecraft.block.Blocks.SAND || targetBlock == net.minecraft.block.Blocks.RED_SAND) {
+                            world.setBlockState(target, dev.candyinfection.init.CandyBlocks.CANDY_SAND.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                            data.addChunkCount(target, 1);
+                            data.blockInfected();
+                        } else if (targetBlock == net.minecraft.block.Blocks.GRAVEL) {
+                            world.setBlockState(target, dev.candyinfection.init.CandyBlocks.CANDY_GRAVEL.getDefaultState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+                            data.addChunkCount(target, 1);
+                            data.blockInfected();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                CandyLog.debug("Grass cleanup failed: " + e.getMessage());
+            }
+        }
+
         // 6. events ----------------------------------------------------------
         if (config.eventsEnabled && data.canStartEvent() && data.getTotalInfected() > 40 && RANDOM.nextInt(3) == 0) {
             InfectionEvents.roll(world, data);

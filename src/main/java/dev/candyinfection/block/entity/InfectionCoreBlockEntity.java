@@ -203,6 +203,24 @@ public class InfectionCoreBlockEntity extends BlockEntity {
                 }
             } catch (Exception ignored) {}
         }
+        // CLEANER LOOK: Dedicated grass/dirt cleanup - converts leftover vanilla grass that makes infection look messy
+        // Budgeted (30 checks) so it won't crash, but ensures cleaner look per user request
+        for (int i = 0; i < 30; i++) {
+            BlockPos target = pos.add(world.random.nextInt(17) - 8, world.random.nextInt(5) - 2, world.random.nextInt(17) - 8);
+            var cur = world.getBlockState(target);
+            var block = cur.getBlock();
+            if (block == net.minecraft.block.Blocks.GRASS_BLOCK) {
+                world.setBlockState(target, CandyBlocks.INFECTED_GRASS_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
+                InfectionWorldState.get(world).addChunkCount(target, 1);
+                InfectionWorldState.get(world).blockInfected();
+            } else if (block == net.minecraft.block.Blocks.DIRT || block == net.minecraft.block.Blocks.COARSE_DIRT ||
+                       block == net.minecraft.block.Blocks.PODZOL || block == net.minecraft.block.Blocks.ROOTED_DIRT) {
+                world.setBlockState(target, CandyBlocks.INFECTED_DIRT.getDefaultState(), Block.NOTIFY_ALL);
+                InfectionWorldState.get(world).addChunkCount(target, 1);
+                InfectionWorldState.get(world).blockInfected();
+            }
+        }
+
         // Nests are important for monster spawning
         if (stage >= 1 && world.random.nextInt(4) == 0) { // Was stage>=2 and 1/6, now stage>=1 and 1/4 = more nests
             try {

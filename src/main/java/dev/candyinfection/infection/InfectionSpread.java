@@ -61,6 +61,25 @@ public final class InfectionSpread {
                 InfectionRuntime.enqueue(world, neighbor);
             }
         }
+        // CLEANER LOOK: Directly convert nearby leftover grass/dirt that was missed
+        // This is budgeted (only 1/5 chance per tick, only 2 blocks) so it won't crash but cleans up
+        if (world.random.nextInt(5) == 0) {
+            for (int i = 0; i < 2; i++) {
+                BlockPos target = pos.add(world.random.nextInt(3) - 1, 0, world.random.nextInt(3) - 1);
+                BlockState targetState = world.getBlockState(target);
+                Block targetBlock = targetState.getBlock();
+                // Prioritize grass/dirt cleanup for cleaner look
+                if (targetBlock == Blocks.GRASS_BLOCK) {
+                    world.setBlockState(target, CandyBlocks.INFECTED_GRASS_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
+                    onInfectedBlockPlaced(world, target, world.getBlockState(target));
+                    InfectionRuntime.enqueue(world, target);
+                } else if (targetBlock == Blocks.DIRT || targetBlock == Blocks.COARSE_DIRT || targetBlock == Blocks.PODZOL) {
+                    world.setBlockState(target, CandyBlocks.INFECTED_DIRT.getDefaultState(), Block.NOTIFY_ALL);
+                    onInfectedBlockPlaced(world, target, world.getBlockState(target));
+                    InfectionRuntime.enqueue(world, target);
+                }
+            }
+        }
         // Dense colonies also sprout vegetation directly - more frequent now
         if (world.random.nextInt(35) == 0 && world.isAir(pos.up())) {
             BlockState plant = InfectionConversions.randomVegetation(world.random, data.getStage());
