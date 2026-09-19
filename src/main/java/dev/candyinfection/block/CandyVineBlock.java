@@ -67,7 +67,7 @@ public class CandyVineBlock extends CandyBlock {
     }
 
     @Override
-    protected BlockState getPlacementState(ItemPlacementContext ctx) {
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState state = this.getDefaultState();
         for (Direction direction : ctx.getPlacementDirections()) {
             if (direction.getAxis().isHorizontal()) {

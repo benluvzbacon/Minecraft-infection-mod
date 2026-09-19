@@ -78,7 +78,7 @@ public class SugarCrystalClusterBlock extends CandyBlock {
     }
 
     @Override
-    protected ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         return new ItemStack(CandyItems.SUGAR_SHARD);
     }
 }

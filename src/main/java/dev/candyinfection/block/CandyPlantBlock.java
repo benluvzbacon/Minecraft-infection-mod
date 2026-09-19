@@ -62,7 +62,7 @@ public class CandyPlantBlock extends CandyBlock {
         };
     }
 
-    @Override
+    /** Whether this plant may sit on the given floor block. */
     protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
         return InfectedSoilBlock.isCandySoil(world, pos)
                 || floor.isOf(CandyBlocks.CANDY_SAND)

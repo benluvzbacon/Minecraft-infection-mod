@@ -126,7 +126,7 @@ public final class InfectedMobHandler {
             return;
         }
         for (Entity entity : world.iterateEntities()) {
-            if (!(entity instanceof MobEntity mob) || mob instanceof CandyMob || mob instanceof PlayerEntity) {
+            if (!(entity instanceof MobEntity mob) || mob instanceof CandyMob) {
                 continue;
             }
             if (isInfected(mob)) {
@@ -257,6 +257,7 @@ public final class InfectedMobHandler {
 
     /** Same idea for effects. */
     private static final class CandyEffectsRef {
-        private static final net.minecraft.entity.effect.StatusEffect STICKY = dev.candyinfection.init.CandyEffects.STICKY;
+        private static final net.minecraft.registry.entry.RegistryEntry.Reference<net.minecraft.entity.effect.StatusEffect> STICKY =
+                dev.candyinfection.init.CandyEffects.STICKY;
     }
 }

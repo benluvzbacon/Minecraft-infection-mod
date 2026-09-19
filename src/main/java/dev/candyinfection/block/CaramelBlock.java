@@ -28,7 +28,7 @@ public class CaramelBlock extends CandyBlock {
     }
 
     @Override
-    protected void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (!world.isClient && entity instanceof LivingEntity living && living.age % 30 == 0) {
             living.addStatusEffect(new StatusEffectInstance(CandyEffects.CARAMEL_COATED, 120, 0, false, true));
         }

@@ -52,13 +52,13 @@ public class StickySyrupBlock extends CandyBlock {
     }
 
     @Override
-    protected void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         // Syrup is soft - falling into it barely hurts.
         entity.handleFallDamage(fallDistance, 0.1F, world.getDamageSources().fall());
     }
 
     @Override
-    protected void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (!world.isClient && entity instanceof PlayerEntity player && player.age % 60 == 0) {
             player.addStatusEffect(new StatusEffectInstance(CandyEffects.STICKY, 80, 0, false, true));
         }
