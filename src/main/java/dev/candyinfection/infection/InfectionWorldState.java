@@ -316,27 +316,19 @@ public final class InfectionWorldState extends PersistentState {
         }
         nbt.put("Chunks", chunkList);
 
-        NbtList coreList = new NbtList();
-        for (long packed : this.cores) {
-            coreList.add(NbtLong.of(packed));
-        }
-        nbt.put("Cores", coreList);
+        nbt.putLongArray("Cores", this.cores.toLongArray());
 
         NbtList purgeList = new NbtList();
         for (PurgeZone zone : this.purges) {
             NbtCompound purge = new NbtCompound();
-            purge.put("Center", BlockPos.fromLong(zone.center().asLong()).toNbt());
+            purge.putLong("Center", zone.center().asLong());
             purge.putInt("Radius", zone.radius());
             purge.putInt("TicksLeft", zone.ticksLeft());
             purgeList.add(purge);
         }
         nbt.put("Purges", purgeList);
 
-        NbtList nestList = new NbtList();
-        for (long packed : this.nests) {
-            nestList.add(NbtLong.of(packed));
-        }
-        nbt.put("Nests", nestList);
+        nbt.putLongArray("Nests", this.nests.toLongArray());
         return nbt;
     }
 
@@ -358,22 +350,20 @@ public final class InfectionWorldState extends PersistentState {
         }
 
         state.cores.clear();
-        NbtList coreList = nbt.getList("Cores", NbtElement.LONG_TYPE);
-        for (int i = 0; i < coreList.size(); i++) {
-            state.cores.add(coreList.getLong(i));
+        for (long packed : nbt.getLongArray("Cores")) {
+            state.cores.add(packed);
         }
 
         state.purges.clear();
         NbtList purgeList = nbt.getList("Purges", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < purgeList.size(); i++) {
             NbtCompound purge = purgeList.getCompound(i);
-            BlockPos center = BlockPos.fromNbt(purge.getCompound("Center"));
+            BlockPos center = BlockPos.fromLong(purge.getLong("Center"));
             state.purges.add(new PurgeZone(center, purge.getInt("Radius"), purge.getInt("TicksLeft")));
         }
         state.nests.clear();
-        NbtList nestList = nbt.getList("Nests", NbtElement.LONG_TYPE);
-        for (int i = 0; i < nestList.size(); i++) {
-            state.nests.add(nestList.getLong(i));
+        for (long packed : nbt.getLongArray("Nests")) {
+            state.nests.add(packed);
         }
 
         CandyLog.debug("Loaded infection state: stage " + state.stage + ", " + state.totalInfected

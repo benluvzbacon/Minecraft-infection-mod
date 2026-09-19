@@ -27,13 +27,16 @@ public enum InfectionStages {
     private final float spreadMultiplier;
     private final float spawnMultiplier;
     private final float featureMultiplier;
+    private final String description;
 
-    InfectionStages(int level, String label, float spreadMultiplier, float spawnMultiplier, float featureMultiplier) {
+    InfectionStages(int level, String label, float spreadMultiplier, float spawnMultiplier, float featureMultiplier,
+                    String description) {
         this.level = level;
         this.label = label;
         this.spreadMultiplier = spreadMultiplier;
         this.spawnMultiplier = spawnMultiplier;
         this.featureMultiplier = featureMultiplier;
+        this.description = description;
     }
 
     public static InfectionStages of(int level) {
@@ -61,14 +64,6 @@ public enum InfectionStages {
     }
 
     public String description() {
-        return switch (this) {
-            case SEEDING -> "Isolated candy growths appear.";
-            case SPREADING -> "Small infected patches form.";
-            case COLONISING -> "Large infected regions take hold.";
-            case BLOOMING -> "Candy forests and structures appear.";
-            case INFESTING -> "Dangerous candy monsters become common.";
-            case OVERGROWTH -> "Massive candy colonies dominate the landscape.";
-            case TERMINAL -> "The infection behaves like a world ending ecosystem.";
-        };
+        return this.description;
     }
 }

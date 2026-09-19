@@ -173,7 +173,7 @@ public final class CandyStructures {
         }
         changed += set(world, pos.set(ground.getX(), ground.getY() + height, ground.getZ()),
                 CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
-                        .with(net.minecraft.block.BlockProperties.TRIPLE_SIZE, 2), state);
+                        .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, 2), state);
         return changed;
     }
 

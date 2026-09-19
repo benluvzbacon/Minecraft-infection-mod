@@ -32,7 +32,7 @@ CUBE_BLOCKS = [
 ]
 CROSS_BLOCKS = ["gummy_growth", "chocolate_growth", "candy_vines"]
 PILLAR_BLOCKS = ["gummy_log"]
-# sugar_crystal_cluster uses blockstate property "triple_size" (0..2)
+# sugar_crystal_cluster uses its own "size" IntProperty (0..2)
 
 ALL_BLOCKS = CUBE_BLOCKS + CROSS_BLOCKS + PILLAR_BLOCKS + ["sugar_crystal_cluster"]
 
@@ -230,9 +230,9 @@ def gen_blockstates():
         }})
 
     blockstate("sugar_crystal_cluster", {"variants": {
-        "triple_size=0": {"model": "%s:block/sugar_crystal_cluster_0" % NS},
-        "triple_size=1": {"model": "%s:block/sugar_crystal_cluster_1" % NS},
-        "triple_size=2": {"model": "%s:block/sugar_crystal_cluster_2" % NS},
+        "size=0": {"model": "%s:block/sugar_crystal_cluster_0" % NS},
+        "size=1": {"model": "%s:block/sugar_crystal_cluster_1" % NS},
+        "size=2": {"model": "%s:block/sugar_crystal_cluster_2" % NS},
     }})
 
 

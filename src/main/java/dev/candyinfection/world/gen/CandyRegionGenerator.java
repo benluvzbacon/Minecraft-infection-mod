@@ -109,7 +109,7 @@ public final class CandyRegionGenerator {
                     changed += place(world, pos.set(x + world.random.nextInt(3) - 1, surface + 1 + i,
                             z + world.random.nextInt(3) - 1),
                             CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
-                                    .with(net.minecraft.block.BlockProperties.TRIPLE_SIZE, i), stages);
+                                    .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, i), stages);
                 }
             }
             case CARAMEL_SWAMP -> changed += place(world, pos.set(x, surface + 1, z),
@@ -126,7 +126,7 @@ public final class CandyRegionGenerator {
             }
             case DEEP_CANDY_CAVERNS -> changed += place(world, pos.set(x, surface + 1, z),
                     CandyBlocks.SUGAR_CRYSTAL_CLUSTER.getDefaultState()
-                            .with(net.minecraft.block.BlockProperties.TRIPLE_SIZE, world.random.nextInt(3)), stages);
+                            .with(dev.candyinfection.block.SugarCrystalClusterBlock.SIZE, world.random.nextInt(3)), stages);
         }
         return changed;
     }

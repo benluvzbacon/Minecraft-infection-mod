@@ -1,12 +1,12 @@
 {
   "variants": {
-    "triple_size=0": {
+    "size=0": {
       "model": "candyinfection:block/sugar_crystal_cluster_0"
     },
-    "triple_size=1": {
+    "size=1": {
       "model": "candyinfection:block/sugar_crystal_cluster_1"
     },
-    "triple_size=2": {
+    "size=2": {
       "model": "candyinfection:block/sugar_crystal_cluster_2"
     }
   }
