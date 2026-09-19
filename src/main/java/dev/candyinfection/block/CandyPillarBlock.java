@@ -14,7 +14,7 @@ public class CandyPillarBlock extends PillarBlock {
     }
 
     @Override
-    public MapCodec<? extends Block> getCodec() {
+    public MapCodec<? extends PillarBlock> getCodec() {
         return CODEC;
     }
 }

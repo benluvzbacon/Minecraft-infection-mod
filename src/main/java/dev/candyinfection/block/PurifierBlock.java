@@ -32,7 +32,7 @@ public class PurifierBlock extends BlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends Block> getCodec() {
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;
     }
 

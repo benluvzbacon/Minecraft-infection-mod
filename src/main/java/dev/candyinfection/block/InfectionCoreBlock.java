@@ -43,7 +43,7 @@ public class InfectionCoreBlock extends BlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends Block> getCodec() {
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;
     }
 
@@ -86,7 +86,7 @@ public class InfectionCoreBlock extends BlockWithEntity {
     }
 
     @Override
-    protected void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient) {
             dev.candyinfection.infection.InfectionCoreLogic.onCoreDestroyed(world, pos, state, player);
         }

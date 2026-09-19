@@ -55,7 +55,7 @@ public class GummySpearItem extends SwordItem {
         if (hits > 0) {
             PlayerInfection.add(user, 1.0F);
         }
-        user.playSound(SoundEvents.ITEM_TRIDENT_THROW, 1.0F, 1.2F);
+        user.playSound(SoundEvents.ITEM_TRIDENT_THROW.value(), 1.0F, 1.2F);
         stack.damage(2, user, EquipmentSlot.MAINHAND);
         user.getItemCooldownManager().set(this, 45);
         return TypedActionResult.consume(stack);
