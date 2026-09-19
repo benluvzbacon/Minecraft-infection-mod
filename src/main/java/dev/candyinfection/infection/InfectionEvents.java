@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 /**
  * Random, world-level infection events. Each one is short lived and local so it
@@ -32,7 +32,7 @@ public final class InfectionEvents {
     public static final String GUMMY_MIGRATION = "gummy_migration";
     public static final String CANDYFALL = "candyfall";
 
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = Random.create();
 
     private InfectionEvents() {
     }

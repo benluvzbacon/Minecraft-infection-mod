@@ -71,7 +71,9 @@ public final class PlayerInfection {
     public static void set(PlayerEntity player, float value) {
         float clamped = Math.max(0.0F, Math.min(100.0F, value));
         player.setAttached(LEVEL, clamped);
-        sync(player);
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            sync(serverPlayer);
+        }
     }
 
     public static void add(PlayerEntity player, float amount) {
@@ -82,9 +84,11 @@ public final class PlayerInfection {
         float after = Math.max(0.0F, Math.min(100.0F, before + amount));
         if (after != before) {
             player.setAttached(LEVEL, after);
-            sync(player);
-            if (crossedTier(before, after)) {
-                onTierChanged(player, after);
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                sync(serverPlayer);
+                if (crossedTier(before, after)) {
+                    onTierChanged(serverPlayer, after);
+                }
             }
         }
     }
@@ -258,7 +262,7 @@ public final class PlayerInfection {
 
     private static void onTierChanged(ServerPlayerEntity player, float level) {
         player.sendMessage(Text.translatable("message.candyinfection.tier", tierLabel(level)), true);
-        player.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 0.8F, level >= SERIOUS ? 0.7F : 1.3F);
+        player.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, 0.8F, level >= SERIOUS ? 0.7F : 1.3F);
     }
 
     // ----------------------------------------------------------------- sync

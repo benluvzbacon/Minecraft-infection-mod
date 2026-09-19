@@ -82,7 +82,8 @@ public class ChocolateCreeperEntity extends CandyHostileEntity {
             return;
         }
         BlockPos pos = this.getBlockPos();
-        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.6F, net.minecraft.world.World.ExplosionSourceType.DEFAULT);
+        dev.candyinfection.infection.CandyBlast.explode(world, this, this.getX(), this.getY(), this.getZ(),
+                6.0F, 12.0F, 6.0F);
         int stage = InfectionWorldState.get(world).getStage();
         int converted = InfectionConversions.infectArea(world, pos, 6.0D, 0.9F, stage, this.random);
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.HOSTILE, 2.0F, 0.8F);

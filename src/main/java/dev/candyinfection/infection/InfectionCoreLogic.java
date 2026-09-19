@@ -53,7 +53,7 @@ public final class InfectionCoreLogic {
         data.addPurge(pos, PURGE_RADIUS, PURGE_TICKS);
 
         serverWorld.playSound(null, pos, SoundEvents.BLOCK_BEACON_DEACTIVATE, SoundCategory.BLOCKS, 3.0F, 0.6F);
-        serverWorld.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 2.0F, 1.4F);
+        serverWorld.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, 2.0F, 1.4F);
         serverWorld.spawnParticles(CandyParticles.PURIFICATION_SPARK, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D,
                 180, 6.0D, 4.0D, 6.0D, 0.06D);
 

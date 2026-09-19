@@ -187,7 +187,8 @@ public class ConfectionerEntity extends CandyHostileEntity {
 
     /** Chocolate explosion: blast plus infection. */
     private void chocolateExplosion(ServerWorld world) {
-        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 3.0F, net.minecraft.world.World.ExplosionSourceType.DEFAULT);
+        dev.candyinfection.infection.CandyBlast.explode(world, this, this.getX(), this.getY(), this.getZ(),
+                7.0F, 14.0F, 5.0F);
         InfectionConversions.infectArea(world, this.getBlockPos(), 7.0D, 0.85F, InfectionStagesHolder.stage(world), this.random);
     }
 

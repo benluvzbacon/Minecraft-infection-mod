@@ -104,7 +104,8 @@ public final class InfectedMobHandler {
         CandyLog.debug(name + " infected at " + mob.getBlockPos().toShortString());
     }
 
-    private static void applyModifiers(MobEntity mob, net.minecraft.entity.attribute.EntityAttribute attribute,
+    private static void applyModifiers(MobEntity mob,
+                                       net.minecraft.registry.entry.RegistryEntry<net.minecraft.entity.attribute.EntityAttribute> attribute,
                                        Identifier id, double amount, EntityAttributeModifier.Operation operation) {
         EntityAttributeInstance instance = mob.getAttributeInstance(attribute);
         if (instance == null || instance.getModifier(id) != null) {
