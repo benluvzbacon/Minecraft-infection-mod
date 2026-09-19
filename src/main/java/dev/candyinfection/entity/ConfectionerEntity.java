@@ -7,6 +7,7 @@ import dev.candyinfection.infection.InfectionConversions;
 import dev.candyinfection.infection.InfectionRuntime;
 import dev.candyinfection.infection.InfectionWorldState;
 import dev.candyinfection.infection.PlayerInfection;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +27,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 /**
  * The Confectioner: the boss of the mod.
@@ -157,7 +157,7 @@ public class ConfectionerEntity extends CandyHostileEntity {
         for (int i = 0; i < count; i++) {
             InfectionRuntime.spawnMonster(world, this.getBlockPos().add(this.random.nextInt(11) - 5, 0, this.random.nextInt(11) - 5), true);
         }
-        this.playSound(SoundEvents.ENTITY_EVOKER_SUMMON_SPELL, 1.6F, 0.8F);
+        this.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, 1.6F, 0.8F);
         world.spawnParticles(CandyParticles.GUMMY_DROPLET, this.getX(), this.getY() + 2.0D, this.getZ(), 60, 2.0D, 2.0D, 2.0D, 0.05D);
     }
 
@@ -187,7 +187,7 @@ public class ConfectionerEntity extends CandyHostileEntity {
 
     /** Chocolate explosion: blast plus infection. */
     private void chocolateExplosion(ServerWorld world) {
-        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 3.0F, Explosion.DestructionType.DESTROY);
+        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 3.0F);
         InfectionConversions.infectArea(world, this.getBlockPos(), 7.0D, 0.85F, InfectionStagesHolder.stage(world), this.random);
     }
 

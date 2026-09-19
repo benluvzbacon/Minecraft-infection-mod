@@ -43,7 +43,7 @@ public class InfectionCoreBlock extends BlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

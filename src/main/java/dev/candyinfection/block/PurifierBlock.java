@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.candyinfection.block.entity.PurifierBlockEntity;
 import dev.candyinfection.init.CandyBlockEntities;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -31,7 +32,7 @@ public class PurifierBlock extends BlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

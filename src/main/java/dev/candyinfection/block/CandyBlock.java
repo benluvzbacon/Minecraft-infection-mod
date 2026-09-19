@@ -33,7 +33,7 @@ public class CandyBlock extends Block {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

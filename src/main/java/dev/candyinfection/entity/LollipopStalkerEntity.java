@@ -79,12 +79,11 @@ public class LollipopStalkerEntity extends CandyHostileEntity {
         for (int dy = -2; dy <= 3; dy++) {
             BlockPos candidate = destination.up(dy);
             if (world.isAir(candidate) && world.isAir(candidate.up()) && !world.getBlockState(candidate.down()).isAir()) {
-                if (this.requestTeleport(candidate.getX() + 0.5D, candidate.getY(), candidate.getZ() + 0.5D)) {
-                    world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.HOSTILE, 1.0F, 0.9F);
-                    world.spawnParticles(CandyParticles.INFECTION_SPARK, this.getX(), this.getY() + 1.5D, this.getZ(),
-                            40, 0.6D, 1.4D, 0.6D, 0.04D);
-                    return;
-                }
+                this.requestTeleport(candidate.getX() + 0.5D, candidate.getY(), candidate.getZ() + 0.5D);
+                world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.HOSTILE, 1.0F, 0.9F);
+                world.spawnParticles(CandyParticles.INFECTION_SPARK, this.getX(), this.getY() + 1.5D, this.getZ(),
+                        40, 0.6D, 1.4D, 0.6D, 0.04D);
+                return;
             }
         }
     }

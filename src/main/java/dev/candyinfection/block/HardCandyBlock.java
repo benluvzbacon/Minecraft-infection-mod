@@ -2,6 +2,7 @@ package dev.candyinfection.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 
 /**
  * Translucent hard candy. The building material of candy castles, fortresses
@@ -15,7 +16,7 @@ public class HardCandyBlock extends CandyBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 }

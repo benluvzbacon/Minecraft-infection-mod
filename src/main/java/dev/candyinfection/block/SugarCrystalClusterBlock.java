@@ -36,7 +36,7 @@ public class SugarCrystalClusterBlock extends CandyBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

@@ -18,7 +18,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 /**
  * Chocolate Creeper: looks like a creeper, detonates like one - but instead of
@@ -83,7 +82,7 @@ public class ChocolateCreeperEntity extends CandyHostileEntity {
             return;
         }
         BlockPos pos = this.getBlockPos();
-        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.6F, Explosion.DestructionType.DESTROY);
+        world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.6F);
         int stage = InfectionWorldState.get(world).getStage();
         int converted = InfectionConversions.infectArea(world, pos, 6.0D, 0.9F, stage, this.random);
         world.playSound(null, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.HOSTILE, 2.0F, 0.8F);

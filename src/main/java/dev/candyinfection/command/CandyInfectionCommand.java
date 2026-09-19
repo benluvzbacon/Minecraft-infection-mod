@@ -87,9 +87,10 @@ public final class CandyInfectionCommand {
                                                 IntegerArgumentType.getInteger(context, "count"))))))
                 .then(CommandManager.literal("core")
                         .requires(source -> source.hasPermissionLevel(PERMISSION))
-                        .executes(CandyInfectionCommand::placeCore)
+                        .executes(context -> placeCore(context, null))
                         .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
-                                .executes(context -> placeCore(context))))
+                                .executes(context -> placeCore(context,
+                                        BlockPosArgumentType.getBlockPos(context, "pos")))))
                 .then(CommandManager.literal("purge")
                         .requires(source -> source.hasPermissionLevel(PERMISSION))
                         .then(CommandManager.argument("radius", IntegerArgumentType.integer(1, 128))
@@ -215,11 +216,10 @@ public final class CandyInfectionCommand {
         return spawned;
     }
 
-    private static int placeCore(CommandContext<ServerCommandSource> context) {
+    private static int placeCore(CommandContext<ServerCommandSource> context, BlockPos argument) {
         ServerCommandSource source = context.getSource();
         ServerWorld world = source.getWorld();
-        BlockPos pos = context.getArgumentNames().contains("pos")
-                ? BlockPosArgumentType.getBlockPos(context, "pos")
+        BlockPos pos = argument != null ? argument
                 : source.getPlayer() != null ? source.getPlayer().getBlockPos() : BlockPos.ORIGIN;
         world.setBlockState(pos, dev.candyinfection.init.CandyBlocks.INFECTION_CORE.getDefaultState(), 3);
         InfectionWorldState.get(world).addCore(pos);

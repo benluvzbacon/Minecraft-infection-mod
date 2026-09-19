@@ -24,7 +24,7 @@ public class InfectedSoilBlock extends CandyBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

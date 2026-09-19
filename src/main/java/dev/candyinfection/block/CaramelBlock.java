@@ -3,6 +3,7 @@ package dev.candyinfection.block;
 import com.mojang.serialization.MapCodec;
 import dev.candyinfection.init.CandyEffects;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +23,7 @@ public class CaramelBlock extends CandyBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 

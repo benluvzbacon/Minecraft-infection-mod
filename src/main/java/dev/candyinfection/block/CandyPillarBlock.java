@@ -2,6 +2,7 @@ package dev.candyinfection.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.PillarBlock;
 
 /** Infected wood: a gummy log that can be placed along any axis. */
@@ -13,7 +14,7 @@ public class CandyPillarBlock extends PillarBlock {
     }
 
     @Override
-    protected MapCodec<? extends AbstractBlock> getCodec() {
+    protected MapCodec<? extends Block> getCodec() {
         return CODEC;
     }
 }
